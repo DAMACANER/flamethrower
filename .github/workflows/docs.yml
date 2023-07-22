@@ -25,7 +25,6 @@ jobs:
 
       # ADJUST THIS: install all dependencies (including pdoc)
       - run: pip install poetry
-      - run: poetry shell
       - run: poetry config virtualenvs.create false
       - run: poetry config installer.max-workers 10
       - run: poetry install --no-interaction --no-ansi --without dev
