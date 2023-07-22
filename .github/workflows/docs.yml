@@ -24,7 +24,7 @@ jobs:
           python-version: "3.11"
 
       # ADJUST THIS: install all dependencies (including pdoc)
-      - run: pip install -e poetry
+      - run: pip install poetry
       - run: poetry shell
       - run: poetry config virtualenvs.create false
       - run: poetry config installer.max-workers 10
