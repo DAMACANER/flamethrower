@@ -5,6 +5,11 @@
 
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
+import os
+import sys
+
+sys.path.insert(0, os.path.abspath("../"))  # add project root to system path
+sys.path.insert(0, os.path.abspath("./ext"))
 
 project = "Flamethrower"
 copyright = "2023, caner"
@@ -21,11 +26,7 @@ html_theme_options = {
     "dark_logo": "logo.jpg",
 }
 
-extensions = [
-    "sphinx.ext.autodoc",
-    "sphinx.ext.napoleon",
-]
-suppress_warnings = ["autodoc"]
+extensions = ["sphinx.ext.autodoc", "sphinx.ext.napoleon", "sqlalchemy_autodoc"]
 
 # Napoleon settings
 napoleon_google_docstring = True

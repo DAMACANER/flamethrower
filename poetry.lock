@@ -447,25 +447,6 @@ files = [
 ]
 
 [[package]]
-name = "pdoc"
-version = "14.0.0"
-description = "API Documentation for Python Projects"
-optional = false
-python-versions = ">=3.8"
-files = [
-    {file = "pdoc-14.0.0-py3-none-any.whl", hash = "sha256:4514041ff5da33f1adbc700002a661600fc13a9adadef317bc6ae8be9e61154b"},
-    {file = "pdoc-14.0.0.tar.gz", hash = "sha256:ad6c16c949e5dd8b30effc5398aedb5779ffe8ab94be91ce2cddc320e8127900"},
-]
-
-[package.dependencies]
-Jinja2 = ">=2.11.0"
-MarkupSafe = "*"
-pygments = ">=2.12.0"
-
-[package.extras]
-dev = ["black", "hypothesis", "mypy", "pygments (>=2.14.0)", "pytest", "pytest-cov", "pytest-timeout", "ruff", "tox", "types-pygments"]
-
-[[package]]
 name = "pydantic"
 version = "2.0.3"
 description = "Data validation using Python type hints"
@@ -949,4 +930,4 @@ standard = ["colorama (>=0.4)", "httptools (>=0.5.0)", "python-dotenv (>=0.13)",
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "784cdb179ae11437f43c289f4e69c3e84773a80176fad3b23915585fe94b427c"
+content-hash = "822a13c26c89823fd8f8f8fd3ed7d65596f69cd7ab3ee954d03b6dcc99dc758c"

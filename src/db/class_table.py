@@ -6,55 +6,6 @@ from sqlalchemy import select
 
 
 class ClassTable(Base):
-    """
-    Example:
-
-    An example instance of ClassTable in JSON format would look like this:
-
-    ```json
-        {
-            "flurry_of_blows": "None",
-            "slots_1": "None",
-            "slots_8": "None",
-            "spells_known_5": "None",
-            "name": "Barbarian",
-            "bonus_spells": "None",
-            "slots_2": "None",
-            "slots_9": "None",
-            "spells_known_7": "None",
-            "fort_save": "+7",
-            "powers_known": "None",
-            "slots_3": "None",
-            "spells_known_0": "None",
-            "spells_known_8": "None",
-            "ref_save": "+3",
-            "unarmored_speed_bonus": "None",
-            "slots_4": "None",
-            "spells_known_1": "None",
-            "spells_known_9": "None",
-            "will_save": "+3",
-            "unarmed_damage": "None",
-            "slots_5": "None",
-            "spells_known_2": "None",
-            "reference": "SRD 3.5 ClassesI",
-            "caster_level": "None",
-            "power_level": "None",
-            "slots_6": "None",
-            "spells_known_3": "None",
-            "level": "11",
-            "points_per_day": "None",
-            "special": "Greater rage",
-            "slots_7": "None",
-            "spells_known_4": "None",
-            "id": 11,
-            "base_attack_bonus": "+11/+6/+1",
-            "ac_bonus": "None",
-            "slots_0": "None",
-            "spells_known_6": "None"
-        },
-    ```
-    """
-
     __tablename__ = "class_table"
     id = Column("id", Integer, primary_key=True)
     name = Column("name", String)

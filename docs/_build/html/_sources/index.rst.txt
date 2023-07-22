@@ -10,11 +10,4 @@ Flamethrower - DnD & 3.5e REST API
    :maxdepth: 2
    :caption: Contents:
 
-
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+   modules
