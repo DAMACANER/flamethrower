@@ -1,5 +1,8 @@
 from sqlalchemy import Column, Integer, String
-from definitions import Base
+from src.definitions import Base
+from sqlalchemy.ext.asyncio import AsyncSession
+from typing import Sequence
+from sqlalchemy import select
 
 
 class ClassTable(Base):
@@ -42,3 +45,12 @@ class ClassTable(Base):
     spells_known_8 = Column("spells_known_8", String)
     spells_known_9 = Column("spells_known_9", String)
     reference = Column("reference", String)
+
+
+class ClassTableRepository:
+    def __init__(self, db: AsyncSession):
+        self.db = db
+
+    async def get_all(self, page: int = 1, page_size: int = 10) -> Sequence[ClassTable]:
+        query = select(ClassTable).offset(page_size * page).limit(page_size)
+        return (await self.db.execute(query)).scalars().all()

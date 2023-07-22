@@ -10,7 +10,7 @@ from sqlalchemy.ext.asyncio import (
 DB_LOC = ROOT_DIR + "/dnd35.db"
 DATABASE_URL = f"sqlite+aiosqlite:///{DB_LOC}"
 
-engine = create_async_engine(DATABASE_URL, echo=True, pool_pre_ping=True)
+engine = create_async_engine(DATABASE_URL, pool_pre_ping=True)
 
 async_session = async_sessionmaker(engine, expire_on_commit=False)
 
