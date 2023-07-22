@@ -27,7 +27,7 @@ jobs:
       - run: pip install poetry
       - run: poetry config virtualenvs.create false
       - run: poetry config installer.max-workers 10
-      - run: poetry install --no-interaction --no-ansi --without dev
+      - run: poetry install --no-interaction --no-ansi
       - run: poetry shell
       # ADJUST THIS: build your documentation into docs/.
       # We use a custom build script for pdoc itself, ideally you just run `pdoc -o docs/ ...` here.
