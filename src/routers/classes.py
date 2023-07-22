@@ -3,7 +3,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from src.db.engine import get_db
 from src.db.class_table import ClassTableRepository
 
-router = APIRouter(prefix="/classes")
+router = APIRouter(prefix="/classes", tags=["Classes"])
 
 
 @router.get("/all")
