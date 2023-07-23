@@ -7,7 +7,7 @@ from sqlalchemy import select
 
 class ClassTable(Base):
     __tablename__ = "class_table"
-    id = Column("id", Integer, primary_key=True)
+    id = Column("id", Integer, primary_key=True, unique=True)
     name = Column("name", String)
     level = Column("level", String)
     base_attack_bonus = Column("base_attack_bonus", String)

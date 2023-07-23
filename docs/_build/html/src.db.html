@@ -203,343 +203,218 @@
         </div>
         <article role="main">
           <section id="src-db-package">
-<h1>src.db package<a class="headerlink" href="#src-db-package" title="Permalink to this heading">#</a></h1>
+<span id="src-db"></span><h1>src.db package<a class="headerlink" href="#src-db-package" title="Permalink to this heading">#</a></h1>
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading">#</a></h2>
 </section>
-<section id="module-src.db.class_table">
-<span id="src-db-class-table-module"></span><h2>src.db.class_table module<a class="headerlink" href="#module-src.db.class_table" title="Permalink to this heading">#</a></h2>
+<section id="src-db-class-table-module">
+<h2>src.db.class_table module<a class="headerlink" href="#src-db-class-table-module" title="Permalink to this heading">#</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="src.db.class_table.ClassTable">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.db.class_table.</span></span><span class="sig-name descname"><span class="pre">ClassTable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.db.class_table.ClassTable" title="Permalink to this definition">#</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Base</span></code>
-:final:</p>
-<div class="table-wrapper docutils container">
-<table class="docutils align-default">
-<thead>
-<tr class="row-odd"><th class="head"><p>Column</p></th>
-<th class="head"><p>Type</p></th>
-</tr>
-</thead>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Base</span></code></p>
+<div class="table-wrapper docutils container" id="classtable">
+<table class="docutils align-default" id="classtable">
+<caption><span class="caption-text">ClassTable Columns</span><a class="headerlink" href="#classtable" title="Permalink to this table">#</a></caption>
 <tbody>
-<tr class="row-even"><td><p>id</p></td>
+<tr class="row-odd"><td><p>Column</p></td>
+<td><p>Type</p></td>
+<td><p>Key</p></td>
+<td><p>Unique</p></td>
+</tr>
+<tr class="row-even"><td><a id="classtable-id" href="#classtable-id">id</a></td>
 <td><p>INTEGER</p></td>
+<td><p>Primary</p></td>
+<td><p>True</p></td>
 </tr>
-<tr class="row-odd"><td><p>name</p></td>
+<tr class="row-odd"><td><a id="classtable-name" href="#classtable-name">name</a></td>
 <td><p>VARCHAR</p></td>
+<td></td>
+<td></td>
 </tr>
-<tr class="row-even"><td><p>level</p></td>
+<tr class="row-even"><td><a id="classtable-level" href="#classtable-level">level</a></td>
 <td><p>VARCHAR</p></td>
+<td></td>
+<td></td>
 </tr>
-<tr class="row-odd"><td><p>base_attack_bonus</p></td>
+<tr class="row-odd"><td><a id="classtable-base_attack_bonus" href="#classtable-base_attack_bonus">base_attack_bonus</a></td>
 <td><p>VARCHAR</p></td>
+<td></td>
+<td></td>
 </tr>
-<tr class="row-even"><td><p>fort_save</p></td>
+<tr class="row-even"><td><a id="classtable-fort_save" href="#classtable-fort_save">fort_save</a></td>
 <td><p>VARCHAR</p></td>
+<td></td>
+<td></td>
 </tr>
-<tr class="row-odd"><td><p>ref_save</p></td>
+<tr class="row-odd"><td><a id="classtable-ref_save" href="#classtable-ref_save">ref_save</a></td>
 <td><p>VARCHAR</p></td>
+<td></td>
+<td></td>
 </tr>
-<tr class="row-even"><td><p>will_save</p></td>
+<tr class="row-even"><td><a id="classtable-will_save" href="#classtable-will_save">will_save</a></td>
 <td><p>VARCHAR</p></td>
+<td></td>
+<td></td>
 </tr>
-<tr class="row-odd"><td><p>caster_level</p></td>
+<tr class="row-odd"><td><a id="classtable-caster_level" href="#classtable-caster_level">caster_level</a></td>
 <td><p>VARCHAR</p></td>
+<td></td>
+<td></td>
 </tr>
-<tr class="row-even"><td><p>points_per_day</p></td>
+<tr class="row-even"><td><a id="classtable-points_per_day" href="#classtable-points_per_day">points_per_day</a></td>
 <td><p>VARCHAR</p></td>
+<td></td>
+<td></td>
 </tr>
-<tr class="row-odd"><td><p>ac_bonus</p></td>
+<tr class="row-odd"><td><a id="classtable-ac_bonus" href="#classtable-ac_bonus">ac_bonus</a></td>
 <td><p>VARCHAR</p></td>
+<td></td>
+<td></td>
 </tr>
-<tr class="row-even"><td><p>flurry_of_blows</p></td>
+<tr class="row-even"><td><a id="classtable-flurry_of_blows" href="#classtable-flurry_of_blows">flurry_of_blows</a></td>
 <td><p>VARCHAR</p></td>
+<td></td>
+<td></td>
 </tr>
-<tr class="row-odd"><td><p>bonus_spells</p></td>
+<tr class="row-odd"><td><a id="classtable-bonus_spells" href="#classtable-bonus_spells">bonus_spells</a></td>
 <td><p>VARCHAR</p></td>
+<td></td>
+<td></td>
 </tr>
-<tr class="row-even"><td><p>powers_known</p></td>
+<tr class="row-even"><td><a id="classtable-powers_known" href="#classtable-powers_known">powers_known</a></td>
 <td><p>VARCHAR</p></td>
+<td></td>
+<td></td>
 </tr>
-<tr class="row-odd"><td><p>unarmored_speed_bonus</p></td>
+<tr class="row-odd"><td><a id="classtable-unarmored_speed_bonus" href="#classtable-unarmored_speed_bonus">unarmored_speed_bonus</a></td>
 <td><p>VARCHAR</p></td>
+<td></td>
+<td></td>
 </tr>
-<tr class="row-even"><td><p>unarmed_damage</p></td>
+<tr class="row-even"><td><a id="classtable-unarmed_damage" href="#classtable-unarmed_damage">unarmed_damage</a></td>
 <td><p>VARCHAR</p></td>
+<td></td>
+<td></td>
 </tr>
-<tr class="row-odd"><td><p>power_level</p></td>
+<tr class="row-odd"><td><a id="classtable-power_level" href="#classtable-power_level">power_level</a></td>
 <td><p>VARCHAR</p></td>
+<td></td>
+<td></td>
 </tr>
-<tr class="row-even"><td><p>special</p></td>
+<tr class="row-even"><td><a id="classtable-special" href="#classtable-special">special</a></td>
 <td><p>VARCHAR</p></td>
+<td></td>
+<td></td>
 </tr>
-<tr class="row-odd"><td><p>slots_0</p></td>
+<tr class="row-odd"><td><a id="classtable-slots_0" href="#classtable-slots_0">slots_0</a></td>
 <td><p>VARCHAR</p></td>
+<td></td>
+<td></td>
 </tr>
-<tr class="row-even"><td><p>slots_1</p></td>
+<tr class="row-even"><td><a id="classtable-slots_1" href="#classtable-slots_1">slots_1</a></td>
 <td><p>VARCHAR</p></td>
+<td></td>
+<td></td>
 </tr>
-<tr class="row-odd"><td><p>slots_2</p></td>
+<tr class="row-odd"><td><a id="classtable-slots_2" href="#classtable-slots_2">slots_2</a></td>
 <td><p>VARCHAR</p></td>
+<td></td>
+<td></td>
 </tr>
-<tr class="row-even"><td><p>slots_3</p></td>
+<tr class="row-even"><td><a id="classtable-slots_3" href="#classtable-slots_3">slots_3</a></td>
 <td><p>VARCHAR</p></td>
+<td></td>
+<td></td>
 </tr>
-<tr class="row-odd"><td><p>slots_4</p></td>
+<tr class="row-odd"><td><a id="classtable-slots_4" href="#classtable-slots_4">slots_4</a></td>
 <td><p>VARCHAR</p></td>
+<td></td>
+<td></td>
 </tr>
-<tr class="row-even"><td><p>slots_5</p></td>
+<tr class="row-even"><td><a id="classtable-slots_5" href="#classtable-slots_5">slots_5</a></td>
 <td><p>VARCHAR</p></td>
+<td></td>
+<td></td>
 </tr>
-<tr class="row-odd"><td><p>slots_6</p></td>
+<tr class="row-odd"><td><a id="classtable-slots_6" href="#classtable-slots_6">slots_6</a></td>
 <td><p>VARCHAR</p></td>
+<td></td>
+<td></td>
 </tr>
-<tr class="row-even"><td><p>slots_7</p></td>
+<tr class="row-even"><td><a id="classtable-slots_7" href="#classtable-slots_7">slots_7</a></td>
 <td><p>VARCHAR</p></td>
+<td></td>
+<td></td>
 </tr>
-<tr class="row-odd"><td><p>slots_8</p></td>
+<tr class="row-odd"><td><a id="classtable-slots_8" href="#classtable-slots_8">slots_8</a></td>
 <td><p>VARCHAR</p></td>
+<td></td>
+<td></td>
 </tr>
-<tr class="row-even"><td><p>slots_9</p></td>
+<tr class="row-even"><td><a id="classtable-slots_9" href="#classtable-slots_9">slots_9</a></td>
 <td><p>VARCHAR</p></td>
+<td></td>
+<td></td>
 </tr>
-<tr class="row-odd"><td><p>spells_known_0</p></td>
+<tr class="row-odd"><td><a id="classtable-spells_known_0" href="#classtable-spells_known_0">spells_known_0</a></td>
 <td><p>VARCHAR</p></td>
+<td></td>
+<td></td>
 </tr>
-<tr class="row-even"><td><p>spells_known_1</p></td>
+<tr class="row-even"><td><a id="classtable-spells_known_1" href="#classtable-spells_known_1">spells_known_1</a></td>
 <td><p>VARCHAR</p></td>
+<td></td>
+<td></td>
 </tr>
-<tr class="row-odd"><td><p>spells_known_2</p></td>
+<tr class="row-odd"><td><a id="classtable-spells_known_2" href="#classtable-spells_known_2">spells_known_2</a></td>
 <td><p>VARCHAR</p></td>
+<td></td>
+<td></td>
 </tr>
-<tr class="row-even"><td><p>spells_known_3</p></td>
+<tr class="row-even"><td><a id="classtable-spells_known_3" href="#classtable-spells_known_3">spells_known_3</a></td>
 <td><p>VARCHAR</p></td>
+<td></td>
+<td></td>
 </tr>
-<tr class="row-odd"><td><p>spells_known_4</p></td>
+<tr class="row-odd"><td><a id="classtable-spells_known_4" href="#classtable-spells_known_4">spells_known_4</a></td>
 <td><p>VARCHAR</p></td>
+<td></td>
+<td></td>
 </tr>
-<tr class="row-even"><td><p>spells_known_5</p></td>
+<tr class="row-even"><td><a id="classtable-spells_known_5" href="#classtable-spells_known_5">spells_known_5</a></td>
 <td><p>VARCHAR</p></td>
+<td></td>
+<td></td>
 </tr>
-<tr class="row-odd"><td><p>spells_known_6</p></td>
+<tr class="row-odd"><td><a id="classtable-spells_known_6" href="#classtable-spells_known_6">spells_known_6</a></td>
 <td><p>VARCHAR</p></td>
+<td></td>
+<td></td>
 </tr>
-<tr class="row-even"><td><p>spells_known_7</p></td>
+<tr class="row-even"><td><a id="classtable-spells_known_7" href="#classtable-spells_known_7">spells_known_7</a></td>
 <td><p>VARCHAR</p></td>
+<td></td>
+<td></td>
 </tr>
-<tr class="row-odd"><td><p>spells_known_8</p></td>
+<tr class="row-odd"><td><a id="classtable-spells_known_8" href="#classtable-spells_known_8">spells_known_8</a></td>
 <td><p>VARCHAR</p></td>
+<td></td>
+<td></td>
 </tr>
-<tr class="row-even"><td><p>spells_known_9</p></td>
+<tr class="row-even"><td><a id="classtable-spells_known_9" href="#classtable-spells_known_9">spells_known_9</a></td>
 <td><p>VARCHAR</p></td>
+<td></td>
+<td></td>
 </tr>
-<tr class="row-odd"><td><p>reference</p></td>
+<tr class="row-odd"><td><a id="classtable-reference" href="#classtable-reference">reference</a></td>
 <td><p>VARCHAR</p></td>
+<td></td>
+<td></td>
 </tr>
 </tbody>
 </table>
 </div>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="src.db.class_table.ClassTable.ac_bonus">
-<span class="sig-name descname"><span class="pre">ac_bonus</span></span><a class="headerlink" href="#src.db.class_table.ClassTable.ac_bonus" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="src.db.class_table.ClassTable.base_attack_bonus">
-<span class="sig-name descname"><span class="pre">base_attack_bonus</span></span><a class="headerlink" href="#src.db.class_table.ClassTable.base_attack_bonus" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="src.db.class_table.ClassTable.bonus_spells">
-<span class="sig-name descname"><span class="pre">bonus_spells</span></span><a class="headerlink" href="#src.db.class_table.ClassTable.bonus_spells" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="src.db.class_table.ClassTable.caster_level">
-<span class="sig-name descname"><span class="pre">caster_level</span></span><a class="headerlink" href="#src.db.class_table.ClassTable.caster_level" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="src.db.class_table.ClassTable.flurry_of_blows">
-<span class="sig-name descname"><span class="pre">flurry_of_blows</span></span><a class="headerlink" href="#src.db.class_table.ClassTable.flurry_of_blows" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="src.db.class_table.ClassTable.fort_save">
-<span class="sig-name descname"><span class="pre">fort_save</span></span><a class="headerlink" href="#src.db.class_table.ClassTable.fort_save" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="src.db.class_table.ClassTable.id">
-<span class="sig-name descname"><span class="pre">id</span></span><a class="headerlink" href="#src.db.class_table.ClassTable.id" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="src.db.class_table.ClassTable.level">
-<span class="sig-name descname"><span class="pre">level</span></span><a class="headerlink" href="#src.db.class_table.ClassTable.level" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="src.db.class_table.ClassTable.name">
-<span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#src.db.class_table.ClassTable.name" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="src.db.class_table.ClassTable.points_per_day">
-<span class="sig-name descname"><span class="pre">points_per_day</span></span><a class="headerlink" href="#src.db.class_table.ClassTable.points_per_day" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="src.db.class_table.ClassTable.power_level">
-<span class="sig-name descname"><span class="pre">power_level</span></span><a class="headerlink" href="#src.db.class_table.ClassTable.power_level" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="src.db.class_table.ClassTable.powers_known">
-<span class="sig-name descname"><span class="pre">powers_known</span></span><a class="headerlink" href="#src.db.class_table.ClassTable.powers_known" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="src.db.class_table.ClassTable.ref_save">
-<span class="sig-name descname"><span class="pre">ref_save</span></span><a class="headerlink" href="#src.db.class_table.ClassTable.ref_save" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="src.db.class_table.ClassTable.reference">
-<span class="sig-name descname"><span class="pre">reference</span></span><a class="headerlink" href="#src.db.class_table.ClassTable.reference" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="src.db.class_table.ClassTable.slots_0">
-<span class="sig-name descname"><span class="pre">slots_0</span></span><a class="headerlink" href="#src.db.class_table.ClassTable.slots_0" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="src.db.class_table.ClassTable.slots_1">
-<span class="sig-name descname"><span class="pre">slots_1</span></span><a class="headerlink" href="#src.db.class_table.ClassTable.slots_1" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="src.db.class_table.ClassTable.slots_2">
-<span class="sig-name descname"><span class="pre">slots_2</span></span><a class="headerlink" href="#src.db.class_table.ClassTable.slots_2" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="src.db.class_table.ClassTable.slots_3">
-<span class="sig-name descname"><span class="pre">slots_3</span></span><a class="headerlink" href="#src.db.class_table.ClassTable.slots_3" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="src.db.class_table.ClassTable.slots_4">
-<span class="sig-name descname"><span class="pre">slots_4</span></span><a class="headerlink" href="#src.db.class_table.ClassTable.slots_4" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="src.db.class_table.ClassTable.slots_5">
-<span class="sig-name descname"><span class="pre">slots_5</span></span><a class="headerlink" href="#src.db.class_table.ClassTable.slots_5" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="src.db.class_table.ClassTable.slots_6">
-<span class="sig-name descname"><span class="pre">slots_6</span></span><a class="headerlink" href="#src.db.class_table.ClassTable.slots_6" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="src.db.class_table.ClassTable.slots_7">
-<span class="sig-name descname"><span class="pre">slots_7</span></span><a class="headerlink" href="#src.db.class_table.ClassTable.slots_7" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="src.db.class_table.ClassTable.slots_8">
-<span class="sig-name descname"><span class="pre">slots_8</span></span><a class="headerlink" href="#src.db.class_table.ClassTable.slots_8" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="src.db.class_table.ClassTable.slots_9">
-<span class="sig-name descname"><span class="pre">slots_9</span></span><a class="headerlink" href="#src.db.class_table.ClassTable.slots_9" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="src.db.class_table.ClassTable.special">
-<span class="sig-name descname"><span class="pre">special</span></span><a class="headerlink" href="#src.db.class_table.ClassTable.special" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="src.db.class_table.ClassTable.spells_known_0">
-<span class="sig-name descname"><span class="pre">spells_known_0</span></span><a class="headerlink" href="#src.db.class_table.ClassTable.spells_known_0" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="src.db.class_table.ClassTable.spells_known_1">
-<span class="sig-name descname"><span class="pre">spells_known_1</span></span><a class="headerlink" href="#src.db.class_table.ClassTable.spells_known_1" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="src.db.class_table.ClassTable.spells_known_2">
-<span class="sig-name descname"><span class="pre">spells_known_2</span></span><a class="headerlink" href="#src.db.class_table.ClassTable.spells_known_2" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="src.db.class_table.ClassTable.spells_known_3">
-<span class="sig-name descname"><span class="pre">spells_known_3</span></span><a class="headerlink" href="#src.db.class_table.ClassTable.spells_known_3" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="src.db.class_table.ClassTable.spells_known_4">
-<span class="sig-name descname"><span class="pre">spells_known_4</span></span><a class="headerlink" href="#src.db.class_table.ClassTable.spells_known_4" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="src.db.class_table.ClassTable.spells_known_5">
-<span class="sig-name descname"><span class="pre">spells_known_5</span></span><a class="headerlink" href="#src.db.class_table.ClassTable.spells_known_5" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="src.db.class_table.ClassTable.spells_known_6">
-<span class="sig-name descname"><span class="pre">spells_known_6</span></span><a class="headerlink" href="#src.db.class_table.ClassTable.spells_known_6" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="src.db.class_table.ClassTable.spells_known_7">
-<span class="sig-name descname"><span class="pre">spells_known_7</span></span><a class="headerlink" href="#src.db.class_table.ClassTable.spells_known_7" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="src.db.class_table.ClassTable.spells_known_8">
-<span class="sig-name descname"><span class="pre">spells_known_8</span></span><a class="headerlink" href="#src.db.class_table.ClassTable.spells_known_8" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="src.db.class_table.ClassTable.spells_known_9">
-<span class="sig-name descname"><span class="pre">spells_known_9</span></span><a class="headerlink" href="#src.db.class_table.ClassTable.spells_known_9" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="src.db.class_table.ClassTable.unarmed_damage">
-<span class="sig-name descname"><span class="pre">unarmed_damage</span></span><a class="headerlink" href="#src.db.class_table.ClassTable.unarmed_damage" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="src.db.class_table.ClassTable.unarmored_speed_bonus">
-<span class="sig-name descname"><span class="pre">unarmored_speed_bonus</span></span><a class="headerlink" href="#src.db.class_table.ClassTable.unarmored_speed_bonus" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="src.db.class_table.ClassTable.will_save">
-<span class="sig-name descname"><span class="pre">will_save</span></span><a class="headerlink" href="#src.db.class_table.ClassTable.will_save" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="src.db.class_table.ClassTableRepository">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.db.class_table.</span></span><span class="sig-name descname"><span class="pre">ClassTableRepository</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">AsyncSession</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.db.class_table.ClassTableRepository" title="Permalink to this definition">#</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<dl class="py method">
-<dt class="sig sig-object py" id="src.db.class_table.ClassTableRepository.get_all">
-<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_all</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">page</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">page_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#src.db.class_table.ClassTable" title="src.db.class_table.ClassTable"><span class="pre">ClassTable</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#src.db.class_table.ClassTableRepository.get_all" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
 </dd></dl>
 
 </section>
@@ -618,52 +493,8 @@
             <ul>
 <li><a class="reference internal" href="#">src.db package</a><ul>
 <li><a class="reference internal" href="#submodules">Submodules</a></li>
-<li><a class="reference internal" href="#module-src.db.class_table">src.db.class_table module</a><ul>
-<li><a class="reference internal" href="#src.db.class_table.ClassTable"><code class="docutils literal notranslate"><span class="pre">ClassTable</span></code></a><ul>
-<li><a class="reference internal" href="#src.db.class_table.ClassTable.ac_bonus"><code class="docutils literal notranslate"><span class="pre">ClassTable.ac_bonus</span></code></a></li>
-<li><a class="reference internal" href="#src.db.class_table.ClassTable.base_attack_bonus"><code class="docutils literal notranslate"><span class="pre">ClassTable.base_attack_bonus</span></code></a></li>
-<li><a class="reference internal" href="#src.db.class_table.ClassTable.bonus_spells"><code class="docutils literal notranslate"><span class="pre">ClassTable.bonus_spells</span></code></a></li>
-<li><a class="reference internal" href="#src.db.class_table.ClassTable.caster_level"><code class="docutils literal notranslate"><span class="pre">ClassTable.caster_level</span></code></a></li>
-<li><a class="reference internal" href="#src.db.class_table.ClassTable.flurry_of_blows"><code class="docutils literal notranslate"><span class="pre">ClassTable.flurry_of_blows</span></code></a></li>
-<li><a class="reference internal" href="#src.db.class_table.ClassTable.fort_save"><code class="docutils literal notranslate"><span class="pre">ClassTable.fort_save</span></code></a></li>
-<li><a class="reference internal" href="#src.db.class_table.ClassTable.id"><code class="docutils literal notranslate"><span class="pre">ClassTable.id</span></code></a></li>
-<li><a class="reference internal" href="#src.db.class_table.ClassTable.level"><code class="docutils literal notranslate"><span class="pre">ClassTable.level</span></code></a></li>
-<li><a class="reference internal" href="#src.db.class_table.ClassTable.name"><code class="docutils literal notranslate"><span class="pre">ClassTable.name</span></code></a></li>
-<li><a class="reference internal" href="#src.db.class_table.ClassTable.points_per_day"><code class="docutils literal notranslate"><span class="pre">ClassTable.points_per_day</span></code></a></li>
-<li><a class="reference internal" href="#src.db.class_table.ClassTable.power_level"><code class="docutils literal notranslate"><span class="pre">ClassTable.power_level</span></code></a></li>
-<li><a class="reference internal" href="#src.db.class_table.ClassTable.powers_known"><code class="docutils literal notranslate"><span class="pre">ClassTable.powers_known</span></code></a></li>
-<li><a class="reference internal" href="#src.db.class_table.ClassTable.ref_save"><code class="docutils literal notranslate"><span class="pre">ClassTable.ref_save</span></code></a></li>
-<li><a class="reference internal" href="#src.db.class_table.ClassTable.reference"><code class="docutils literal notranslate"><span class="pre">ClassTable.reference</span></code></a></li>
-<li><a class="reference internal" href="#src.db.class_table.ClassTable.slots_0"><code class="docutils literal notranslate"><span class="pre">ClassTable.slots_0</span></code></a></li>
-<li><a class="reference internal" href="#src.db.class_table.ClassTable.slots_1"><code class="docutils literal notranslate"><span class="pre">ClassTable.slots_1</span></code></a></li>
-<li><a class="reference internal" href="#src.db.class_table.ClassTable.slots_2"><code class="docutils literal notranslate"><span class="pre">ClassTable.slots_2</span></code></a></li>
-<li><a class="reference internal" href="#src.db.class_table.ClassTable.slots_3"><code class="docutils literal notranslate"><span class="pre">ClassTable.slots_3</span></code></a></li>
-<li><a class="reference internal" href="#src.db.class_table.ClassTable.slots_4"><code class="docutils literal notranslate"><span class="pre">ClassTable.slots_4</span></code></a></li>
-<li><a class="reference internal" href="#src.db.class_table.ClassTable.slots_5"><code class="docutils literal notranslate"><span class="pre">ClassTable.slots_5</span></code></a></li>
-<li><a class="reference internal" href="#src.db.class_table.ClassTable.slots_6"><code class="docutils literal notranslate"><span class="pre">ClassTable.slots_6</span></code></a></li>
-<li><a class="reference internal" href="#src.db.class_table.ClassTable.slots_7"><code class="docutils literal notranslate"><span class="pre">ClassTable.slots_7</span></code></a></li>
-<li><a class="reference internal" href="#src.db.class_table.ClassTable.slots_8"><code class="docutils literal notranslate"><span class="pre">ClassTable.slots_8</span></code></a></li>
-<li><a class="reference internal" href="#src.db.class_table.ClassTable.slots_9"><code class="docutils literal notranslate"><span class="pre">ClassTable.slots_9</span></code></a></li>
-<li><a class="reference internal" href="#src.db.class_table.ClassTable.special"><code class="docutils literal notranslate"><span class="pre">ClassTable.special</span></code></a></li>
-<li><a class="reference internal" href="#src.db.class_table.ClassTable.spells_known_0"><code class="docutils literal notranslate"><span class="pre">ClassTable.spells_known_0</span></code></a></li>
-<li><a class="reference internal" href="#src.db.class_table.ClassTable.spells_known_1"><code class="docutils literal notranslate"><span class="pre">ClassTable.spells_known_1</span></code></a></li>
-<li><a class="reference internal" href="#src.db.class_table.ClassTable.spells_known_2"><code class="docutils literal notranslate"><span class="pre">ClassTable.spells_known_2</span></code></a></li>
-<li><a class="reference internal" href="#src.db.class_table.ClassTable.spells_known_3"><code class="docutils literal notranslate"><span class="pre">ClassTable.spells_known_3</span></code></a></li>
-<li><a class="reference internal" href="#src.db.class_table.ClassTable.spells_known_4"><code class="docutils literal notranslate"><span class="pre">ClassTable.spells_known_4</span></code></a></li>
-<li><a class="reference internal" href="#src.db.class_table.ClassTable.spells_known_5"><code class="docutils literal notranslate"><span class="pre">ClassTable.spells_known_5</span></code></a></li>
-<li><a class="reference internal" href="#src.db.class_table.ClassTable.spells_known_6"><code class="docutils literal notranslate"><span class="pre">ClassTable.spells_known_6</span></code></a></li>
-<li><a class="reference internal" href="#src.db.class_table.ClassTable.spells_known_7"><code class="docutils literal notranslate"><span class="pre">ClassTable.spells_known_7</span></code></a></li>
-<li><a class="reference internal" href="#src.db.class_table.ClassTable.spells_known_8"><code class="docutils literal notranslate"><span class="pre">ClassTable.spells_known_8</span></code></a></li>
-<li><a class="reference internal" href="#src.db.class_table.ClassTable.spells_known_9"><code class="docutils literal notranslate"><span class="pre">ClassTable.spells_known_9</span></code></a></li>
-<li><a class="reference internal" href="#src.db.class_table.ClassTable.unarmed_damage"><code class="docutils literal notranslate"><span class="pre">ClassTable.unarmed_damage</span></code></a></li>
-<li><a class="reference internal" href="#src.db.class_table.ClassTable.unarmored_speed_bonus"><code class="docutils literal notranslate"><span class="pre">ClassTable.unarmored_speed_bonus</span></code></a></li>
-<li><a class="reference internal" href="#src.db.class_table.ClassTable.will_save"><code class="docutils literal notranslate"><span class="pre">ClassTable.will_save</span></code></a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#src.db.class_table.ClassTableRepository"><code class="docutils literal notranslate"><span class="pre">ClassTableRepository</span></code></a><ul>
-<li><a class="reference internal" href="#src.db.class_table.ClassTableRepository.get_all"><code class="docutils literal notranslate"><span class="pre">ClassTableRepository.get_all()</span></code></a></li>
-</ul>
-</li>
+<li><a class="reference internal" href="#src-db-class-table-module">src.db.class_table module</a><ul>
+<li><a class="reference internal" href="#src.db.class_table.ClassTable"><code class="docutils literal notranslate"><span class="pre">ClassTable</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#module-src.db.engine">src.db.engine module</a><ul>
@@ -687,5 +518,8 @@
     <script src="_static/doctools.js"></script>
     <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/scripts/furo.js"></script>
+    <script defer="defer" src="https://unpkg.com/@popperjs/core@2"></script>
+    <script defer="defer" src="https://unpkg.com/tippy.js@6"></script>
+    <script defer="defer" src="_static/tippy/src.db.62272721-2844-4211-8b8d-b3809de26e61.js"></script>
     </body>
 </html>

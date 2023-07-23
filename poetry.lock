@@ -698,6 +698,27 @@ sphinx = ">=4.0"
 docs = ["furo", "ipython", "myst-parser", "sphinx-copybutton", "sphinx-inline-tabs"]
 
 [[package]]
+name = "sphinx-tippy"
+version = "0.4.1"
+description = "Get rich tool tips in your sphinx documentation!"
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "sphinx_tippy-0.4.1-py3-none-any.whl", hash = "sha256:e1004bc0bf0463274c603065ea961f88b14cd2616a1438264f1fedfc280db1aa"},
+    {file = "sphinx_tippy-0.4.1.tar.gz", hash = "sha256:bc5a012dd13d079d2049727617b4c52f7fb9779510f1784571bab1550c73e621"},
+]
+
+[package.dependencies]
+beautifulsoup4 = "*"
+jinja2 = "*"
+requests = "*"
+sphinx = ">4"
+
+[package.extras]
+docs = ["furo", "myst-parser"]
+testing = ["pytest", "pytest-regressions", "sphinx-pytest"]
+
+[[package]]
 name = "sphinxcontrib-applehelp"
 version = "1.0.4"
 description = "sphinxcontrib-applehelp is a Sphinx extension which outputs Apple help books"
@@ -930,4 +951,4 @@ standard = ["colorama (>=0.4)", "httptools (>=0.5.0)", "python-dotenv (>=0.13)",
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "822a13c26c89823fd8f8f8fd3ed7d65596f69cd7ab3ee954d03b6dcc99dc758c"
+content-hash = "c278c6c79694adaa2c36332aa5290a60a2b2b27ecb0e5aa633f3d110f97bf45d"

@@ -26,7 +26,12 @@ html_theme_options = {
     "dark_logo": "logo.jpg",
 }
 
-extensions = ["sphinx.ext.autodoc", "sphinx.ext.napoleon", "sqlalchemy_autodoc"]
+extensions = [
+    "sphinx.ext.autodoc",
+    "sphinx.ext.napoleon",
+    "sqlalchemy_autodoc",
+    "sphinx_tippy",
+]
 
 # Napoleon settings
 napoleon_google_docstring = True

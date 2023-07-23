@@ -1,3 +1,5 @@
+.. _src-db:
+
 src.db package
 ==============
 
@@ -7,9 +9,7 @@ Submodules
 src.db.class\_table module
 --------------------------
 
-.. automodule:: src.db.class_table
-   :members:
-   :undoc-members:
+.. autosqlalchemy:: src.db.class_table.ClassTable
    :show-inheritance:
 
 src.db.engine module
