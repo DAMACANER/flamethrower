@@ -56,15 +56,6 @@ type ClassTableRepo struct {
 	Class ClassListColumns
 }
 
-func (c ClassTableRepo) SetStmtBuilder(s StmtBuilder) Repo {
-	c.QueryBuilder = s
-	return c
-}
-
-func (c ClassTableRepo) GetStmtBuilder() StmtBuilder {
-	return c.QueryBuilder
-}
-
 func (ClassTableRepo) FindAll(page uint64, pageSize uint64) (*sql.Rows, error) {
 	sql, args, err := squirrel.Select("*").
 		From(ClassTableTableName).
@@ -108,6 +99,6 @@ func (c ClassTableRepo) ExtractVars() map[string]interface{} {
 }
 
 func (c ClassTableRepo) Find(filter ClassTableColumns, page uint64, pageSize uint64) ClassTableRepo {
-	c = c.SetStmtBuilder(squirrel.Select("*").From(ClassTableTableName)).(ClassTableRepo)
+	c.QueryBuilder = squirrel.Select("*").From(ClassTableTableName)
 	return c
 }
