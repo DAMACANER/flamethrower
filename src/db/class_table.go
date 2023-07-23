@@ -8,7 +8,7 @@ import (
 	"github.com/Masterminds/squirrel"
 )
 
-type ClassTable struct {
+type ClassTableColumns struct {
 	ID                  int            `db:"id"`
 	Name                string         `db:"name"`
 	Level               sql.NullString `db:"level"`
@@ -49,12 +49,28 @@ type ClassTable struct {
 	Reference           sql.NullString `db:"reference"`
 }
 
-var ClassTableName = "class_table"
+var ClassTableTableName = "class_table"
 
-type ClassTableRepo struct{}
+type ClassTableRepo struct {
+	*BaseRepo
+	Class ClassListColumns
+}
 
-func (ClassTableRepo) FindAll() (*sql.Rows, error) {
-	sql, args, err := squirrel.Select("*").From(ClassTableName).ToSql()
+func (c ClassTableRepo) SetStmtBuilder(s StmtBuilder) Repo {
+	c.QueryBuilder = s
+	return c
+}
+
+func (c ClassTableRepo) GetStmtBuilder() StmtBuilder {
+	return c.QueryBuilder
+}
+
+func (ClassTableRepo) FindAll(page uint64, pageSize uint64) (*sql.Rows, error) {
+	sql, args, err := squirrel.Select("*").
+		From(ClassTableTableName).
+		Offset(page * pageSize).
+		Limit(pageSize).
+		ToSql()
 	if err != nil {
 		return nil, err
 	}
@@ -65,12 +81,10 @@ func (ClassTableRepo) FindAll() (*sql.Rows, error) {
 	return rows, nil
 }
 
-func (ClassTableRepo) Find(filter ClassTable) (*sql.Rows, error) {
-	q := squirrel.Select("*").From(ClassTableName)
-
-	v := reflect.ValueOf(filter)
+func (c ClassTableRepo) ExtractVars() map[string]interface{} {
+	v := reflect.ValueOf(c.Class)
 	t := v.Type()
-
+	var fields = make(map[string]interface{})
 	for i := 0; i < v.NumField(); i++ {
 		field := v.Field(i)
 		tag := t.Field(i).Tag.Get("db")
@@ -78,26 +92,22 @@ func (ClassTableRepo) Find(filter ClassTable) (*sql.Rows, error) {
 		case sql.NullString:
 			ns := field.Interface().(sql.NullString)
 			if ns.Valid {
-				q = q.Where(squirrel.Eq{tag: ns.String})
+				fields[tag] = ns.String
 			}
 		case string:
 			if field.String() != "" {
-				q = q.Where(squirrel.Eq{tag: field.String()})
+				fields[tag] = field.String()
 			}
 		case int:
 			if field.Int() != 0 {
-				q = q.Where(squirrel.Eq{tag: fmt.Sprintf("%d", field.Int())})
+				fields[tag] = fmt.Sprintf("%d", field.Int())
 			}
 		}
 	}
+	return fields
+}
 
-	sql, args, err := q.ToSql()
-	if err != nil {
-		return nil, err
-	}
-	rows, err := DB.Query(sql, args...)
-	if err != nil {
-		return nil, err
-	}
-	return rows, nil
+func (c ClassTableRepo) Find(filter ClassTableColumns, page uint64, pageSize uint64) ClassTableRepo {
+	c = c.SetStmtBuilder(squirrel.Select("*").From(ClassTableTableName)).(ClassTableRepo)
+	return c
 }
