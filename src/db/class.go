@@ -50,6 +50,13 @@ type ClassListRepo struct {
 	Class ClassListColumns
 }
 
+var TotalClassCount int
+
+func (b *BaseRepo) Count() *BaseRepo {
+	b.QueryBuilder = squirrel.Select("COUNT(*)").From(ClassListTableName)
+	return b
+}
+
 // ExtractVars returns any non-null DB fields with the associated
 // Class table inside the ClassRepo.
 //
@@ -84,7 +91,13 @@ func (c *ClassListRepo) ExtractVars() map[string]interface{} {
 	return fields
 }
 
-func (c *ClassListRepo) FindAll() *BaseRepo {
+// Find selects everything from the constan ClassListTableName.
+//
+// Usage:
+//
+//	repo := &db.ClassListRepo{BaseRepo: &db.BaseRepo{}}
+//	rows, err := repo.Find().Paginate(1, 6).Query()
+func (c *ClassListRepo) Find() *BaseRepo {
 	c.QueryBuilder = squirrel.Select("*").From(ClassListTableName)
 	return c.BaseRepo
 }

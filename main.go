@@ -2,25 +2,33 @@ package main
 
 import (
 	"flamethrower/src/db"
+	"flamethrower/src/views"
 	"fmt"
 	"log"
+	"os"
 
 	"github.com/blockloop/scan"
+	"github.com/rivo/tview"
 )
 
-func main() {
+func init() {
 	db.InitDB("dnd35.db")
 	repo := &db.ClassListRepo{BaseRepo: &db.BaseRepo{}}
-	rows, err := repo.FindAll().Paginate(1, 6).Query()
+	rows, err := repo.Count().Query()
 	if err != nil {
 		log.Fatal(err)
 	}
-	var data []db.ClassListColumns
-	err = scan.Rows(&data, rows)
+	err = scan.Row(&db.TotalClassCount, rows)
 	if err != nil {
 		log.Fatal(err)
 	}
-	for _, row := range data {
-		fmt.Println(row.ClassSkills.String)
+}
+func main() {
+	app := tview.NewApplication().EnableMouse(true)
+	app.SetRoot(views.ReturnClassView(app), true)
+	if err := app.Run(); err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		return
 	}
+
 }
