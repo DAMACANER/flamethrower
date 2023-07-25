@@ -12,4 +12,6 @@ const (
 	ClassDetailsGeneralStatsBox = "generalStats"
 	ClassDetailsEpicStatsBox    = "epicStats"
 	ClassDetailsFooterBox       = "footer"
+	ClassDetailsPrereqBox       = "prereq"
+	ClassDetailsSpellsBox       = "spells"
 )

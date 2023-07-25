@@ -9,8 +9,8 @@ import (
 )
 
 type ClassListColumns struct {
-	ID                   int            `db:"id"`
-	Name                 string         `db:"name"`
+	ID                   sql.NullInt16  `db:"id"`
+	Name                 sql.NullString `db:"name"`
 	Type                 sql.NullString `db:"type"`
 	Alignment            sql.NullString `db:"alignment"`
 	HitDie               sql.NullString `db:"hit_die"`
