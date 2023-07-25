@@ -45,81 +45,26 @@ func ReturnClassDetailView(class db.ClassListColumns, app *tview.Application) *t
 	//
 	// element positioning
 	//
-	elements := make(map[string]*Element)
-	elements[ClassDetailsFooterBox] = &Element{View: footerView, ParentFlex: footbarFlex}
-	elements[ClassDetailsGeneralStatsBox] = &Element{View: generalStatsView, ParentFlex: generalStatsFlex}
-	elements[ClassDetailsEpicStatsBox] = &Element{View: epicView, ParentFlex: rowBelowGeneralStatsFlex}
-	elements[ClassDetailsPrereqBox] = &Element{View: preReqView, ParentFlex: rowBelowGeneralStatsFlex}
-	elements[ClassDetailsSpellsBox] = &Element{View: spellsView, ParentFlex: rowBelowGeneralStatsFlex}
+	elements := make([][]*Element, 3)
+	elements[0] = []*Element{
+		{View: generalStatsView, ParentFlex: generalStatsFlex, Position: struct{ Row, Column int }{0, 0}},
+	}
+	elements[1] = []*Element{
+		{View: epicView, ParentFlex: rowBelowGeneralStatsFlex, Position: struct{ Row, Column int }{1, 0}},
+		{View: preReqView, ParentFlex: rowBelowGeneralStatsFlex, Position: struct{ Row, Column int }{1, 1}},
+		{View: spellsView, ParentFlex: rowBelowGeneralStatsFlex, Position: struct{ Row, Column int }{1, 2}},
+	}
+	elements[2] = []*Element{
+		{View: footerView, ParentFlex: footbarFlex, Position: struct{ Row, Column int }{2, 0}},
+	}
 	//
 	// navigation
 	//
 	var currentElement *Element
 
-	currentElement = elements[ClassDetailsGeneralStatsBox]
+	currentElement = elements[0][0]
 
-	mainFlex.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
-		switch event.Key() {
-		case tcell.KeyLeft, tcell.KeyRight:
-			print("a")
-		}
-		switch event.Rune() {
-		case 'w', 'W':
-			// switch focus between generalStatsView and the columnFlex (which contains epicView1 and epicView2)
-			if currentElement == elements[ClassDetailsGeneralStatsBox] {
-				currentElement = elements[ClassDetailsEpicStatsBox]
-				app.SetFocus(currentElement.View)
-			} else if currentElement.ParentFlex == rowBelowGeneralStatsFlex {
-				currentElement = elements[ClassDetailsGeneralStatsBox]
-				app.SetFocus(currentElement.View)
-			}
-		case 's', 'S':
-			// switch focus between generalStatsView and the columnFlex (which contains epicView1 and epicView2)
-			if currentElement == elements[ClassDetailsGeneralStatsBox] {
-				currentElement = elements[ClassDetailsEpicStatsBox]
-				app.SetFocus(currentElement.View)
-			} else if currentElement.ParentFlex == rowBelowGeneralStatsFlex {
-				currentElement = elements[ClassDetailsGeneralStatsBox]
-				app.SetFocus(currentElement.View)
-			}
-		case 'q', 'Q':
-			app.Stop()
-		case 'a', 'A':
-			// switch focus between generalStatsView and the columnFlex (which contains epicView1 and epicView2)
-			if currentElement.ParentFlex == rowBelowGeneralStatsFlex {
-				switch currentElement {
-				case elements[ClassDetailsEpicStatsBox]:
-					currentElement = elements[ClassDetailsSpellsBox]
-					app.SetFocus(currentElement.View)
-				case elements[ClassDetailsSpellsBox]:
-					currentElement = elements[ClassDetailsPrereqBox]
-					app.SetFocus(currentElement.View)
-				case elements[ClassDetailsPrereqBox]:
-					currentElement = elements[ClassDetailsEpicStatsBox]
-					app.SetFocus(currentElement.View)
-				}
-			}
-		case 'd', 'D':
-			if currentElement.ParentFlex == rowBelowGeneralStatsFlex {
-				switch currentElement {
-				case elements[ClassDetailsEpicStatsBox]:
-					currentElement = elements[ClassDetailsPrereqBox]
-					app.SetFocus(currentElement.View)
-				case elements[ClassDetailsPrereqBox]:
-					currentElement = elements[ClassDetailsSpellsBox]
-					app.SetFocus(currentElement.View)
-				case elements[ClassDetailsSpellsBox]:
-					currentElement = elements[ClassDetailsEpicStatsBox]
-					app.SetFocus(currentElement.View)
-				}
-			} else if currentElement.ParentFlex == generalStatsFlex {
-				currentElement = elements[ClassDetailsGeneralStatsBox]
-				app.SetFocus(currentElement.View)
-			}
-
-		}
-		return event
-	})
+	mainFlex.SetInputCapture(TraverseBoxes(currentElement, elements, app))
 	return mainFlex
 
 }
@@ -131,6 +76,8 @@ func classDetailFooter() *tview.TextView {
 		SetRegions(true).
 		SetWrap(true).
 		SetText("[yellow]Commands: \n").SetTextAlign(tview.AlignCenter)
+
+	footer.SetBorder(true).SetBorderAttributes(tcell.AttrDim)
 
 	fmt.Fprintf(footer, "[white]↵ Enter: [red] Confirm Class \n ")
 	fmt.Fprintf(footer, "[white]W A S D: [red]Change Focus ")
