@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Define the name of your application
-APP_NAME="flamethrower-tui "
+APP_NAME="flamethrower-tui"
 
 # Define the main .go file
 MAIN_FILE="main.go"
@@ -10,10 +10,9 @@ MAIN_FILE="main.go"
 VERSION=$(git describe --tags)
 
 # Function to build for a specific OS/ARCH
-# Function to build for a specific OS/ARCH
 build() {
   echo "Building for $1 $2..."
-  filename="${APP_NAME}-v${VERSION}-$1-$2"
+  filename="${APP_NAME}-${VERSION}-$1-$2"
   if [[ $1 == "windows" ]]; then
     filename="${filename}.exe"
   elif [[ $1 == "darwin" ]]; then
@@ -21,7 +20,6 @@ build() {
   fi
   env GOOS=$1 GOARCH=$2 go build -ldflags "-X main.version=$VERSION" -o build/${filename} ${MAIN_FILE}
 }
-
 
 mkdir -p build
 
