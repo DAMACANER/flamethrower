@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"flamethrower/src/db"
 	"flamethrower/src/views"
 	"fmt"
@@ -12,10 +13,10 @@ import (
 )
 
 func init() {
-	db.InitDB("dnd35.db")
-
+	flag.Parse()
+	db.InitDB(*db.DBLocation)
 }
-func _() {
+func main() {
 	f, err := excelize.OpenFile("sheet.xlsx")
 	if err != nil {
 		log.Fatal(err)
@@ -38,25 +39,4 @@ func _() {
 		return
 	}
 
-}
-
-func main() {
-	f, err := excelize.OpenFile("sheet.xlsx")
-	if err != nil {
-		log.Fatal(err)
-		return
-	}
-	defer func() {
-		// Close the spreadsheet.
-		if err := f.Close(); err != nil {
-			log.Fatal(err)
-			return
-		}
-	}()
-	err = f.SetCellStr("Sheet1", "A4", "caner")
-	if err != nil {
-		log.Fatal(err)
-		return
-	}
-	f.SaveAs("sheet.xlsx")
 }

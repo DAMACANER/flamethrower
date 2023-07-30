@@ -10,10 +10,10 @@ import (
 )
 
 func ReturnClassView(app *tview.Application) *tview.Flex {
-	var pageSize uint64 = 6
-	var currentPageNumber uint64 = 0
+	var PageSize uint64 = DefaultPageSize
+	var CurrentPageNumber uint64 = DefaultStartingPageNumber
 	repo := &db.ClassListRepo{BaseRepo: &db.BaseRepo{}}
-	rows, err := repo.Find().Paginate(currentPageNumber, pageSize).OrderBy("name COLLATE NOCASE").Query()
+	rows, err := repo.Find().Paginate(CurrentPageNumber, PageSize).OrderBy("name COLLATE NOCASE").Query()
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -32,26 +32,40 @@ func ReturnClassView(app *tview.Application) *tview.Flex {
 	for i, skill := range data {
 		list.AddItem(skill.Name.String, "", rune(i), nil)
 	}
+	cnt, err := repo.Find().Count().Query()
+	if err != nil {
+		log.Fatal(err)
+	}
+	err = scan.Row(&db.TotalClassCount, cnt)
+	if err != nil {
+		log.Fatal(err)
+	}
+	fetchingNewData := false
 	list.SetChangedFunc(func(index int, mainText string, secondaryText string, shortcut rune) {
-		list.SetChangedFunc(func(index int, mainText string, secondaryText string, shortcut rune) {
-			if index >= len(data)-1 && len(data) < int(db.TotalClassCount) {
-				currentPageNumber++
-				rows, err := repo.Find().Paginate(currentPageNumber, pageSize).OrderBy("name COLLATE NOCASE").Query()
+		if index >= len(data)-1 && len(data) < int(db.TotalClassCount) && !fetchingNewData {
+			fetchingNewData = true
+			go func() {
+				CurrentPageNumber++
+				rows, err := repo.Find().Paginate(CurrentPageNumber, PageSize).OrderBy("name COLLATE NOCASE").Query()
 				if err != nil {
 					log.Fatal(err)
 				}
 				var newData []db.ClassListColumns
-				err = scan.Rows(&newData, rows) // newData should be here, not data
+				err = scan.Rows(&newData, rows)
 				if err != nil {
 					log.Fatal(err)
 				}
-				for i, newSkill := range newData {
-					list.AddItem(newSkill.Name.String, "", rune(len(data)+i), nil)
-				}
-				data = append(data, newData...)
-			}
-		})
+				app.QueueUpdateDraw(func() {
+					for i, newSkill := range newData {
+						list.AddItem(newSkill.Name.String, "", rune(len(data)+i), nil)
+					}
+					data = append(data, newData...)
+					fetchingNewData = false
+				})
+			}()
+		}
 	})
+
 	list.SetSelectedFunc(func(index int, mainText string, secondaryText string, shortcut rune) {
 		app.SetRoot(ReturnClassDetailView(data[index], app), true)
 	})

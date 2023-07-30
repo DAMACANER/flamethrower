@@ -6,6 +6,9 @@ import (
 	"github.com/xuri/excelize/v2"
 )
 
+var DefaultPageSize uint64 = 5
+var DefaultStartingPageNumber uint64 = 0
+
 type Application struct {
 	App   *tview.Application
 	Sheet *excelize.File

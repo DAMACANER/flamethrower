@@ -3,9 +3,11 @@ package db
 import (
 	"database/sql"
 	"fmt"
+	"log"
 	"reflect"
 
 	"github.com/Masterminds/squirrel"
+	"github.com/brianvoe/gofakeit/v6"
 )
 
 type ClassListColumns struct {
@@ -55,6 +57,129 @@ var TotalClassCount int
 func (b *BaseRepo) Count() *BaseRepo {
 	b.QueryBuilder = squirrel.Select("COUNT(*)").From(ClassListTableName)
 	return b
+}
+
+func (c *ClassListRepo) DropTableIfExists() {
+	_, err := DB.Exec(fmt.Sprintf("DROP TABLE IF EXISTS %s", ClassListTableName))
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+func (c *ClassListRepo) CreateTable() {
+	// create table from ClassListColumns type
+	_, err := DB.Exec(fmt.Sprintf(`CREATE TABLE IF NOT EXISTS %s (
+		id INTEGER PRIMARY KEY AUTOINCREMENT,
+		name TEXT,
+		type TEXT,
+		alignment TEXT,
+		hit_die TEXT,
+		class_skills TEXT,
+		skill_points TEXT,
+		skill_points_ability TEXT,
+		spell_stat TEXT,
+		proficiencies TEXT,
+		spell_type TEXT,
+		epic_feat_base_level TEXT,
+		epic_feat_interval TEXT,
+		epic_feat_list TEXT,
+		epic_full_text TEXT,
+		req_race TEXT,
+		req_weapon_proficiency TEXT,
+		req_base_attack_bonus TEXT,
+		req_skill TEXT,
+		req_feat TEXT,
+		req_spells TEXT,
+		req_languages TEXT,
+		req_psionics TEXT,
+		req_epic_feat TEXT,
+		req_special TEXT,
+		spell_list_1 TEXT,
+		spell_list_2 TEXT,
+		spell_list_3 TEXT,
+		spell_list_4 TEXT,
+		spell_list_5 TEXT,
+		full_text TEXT,
+		reference TEXT
+	)`, ClassListTableName))
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
+func (c *ClassListRepo) PopulateTable(populateSize uint16) {
+	tx, err := DB.Begin()
+	if err != nil {
+		log.Fatal(err)
+	}
+	// generate random data with gofakeit and insert em
+	for i := 0; i < int(populateSize); i++ {
+		c.Class = ClassListColumns{}
+		c.Class.Name = sql.NullString{String: gofakeit.Person().FirstName, Valid: true}
+		c.Class.Type = sql.NullString{String: gofakeit.Car().Type, Valid: true}
+		c.Class.Alignment = sql.NullString{String: gofakeit.BeerStyle(), Valid: true}
+		c.Class.HitDie = sql.NullString{String: "1d6", Valid: true}
+		c.Class.ClassSkills = sql.NullString{String: gofakeit.HipsterSentence(15), Valid: true}
+		c.Class.SkillPoints = sql.NullString{String: fmt.Sprintf("%d", gofakeit.IntRange(1, 15)), Valid: true}
+		c.Class.SkillPointsAbility = sql.NullString{String: gofakeit.Bird(), Valid: true}
+		c.Class.SpellStat = sql.NullString{String: gofakeit.HackerAbbreviation(), Valid: true}
+		c.Class.Proficiencies = sql.NullString{String: gofakeit.Name(), Valid: true}
+		c.Class.SpellType = sql.NullString{String: gofakeit.BeerName(), Valid: true}
+		c.Class.EpicFeatBaseLevel = sql.NullString{String: gofakeit.Name(), Valid: true}
+		c.Class.EpicFeatInterval = sql.NullString{String: gofakeit.Name(), Valid: true}
+		c.Class.EpicFeatList = sql.NullString{String: gofakeit.Name(), Valid: true}
+		c.Class.EpicFullText = sql.NullString{String: gofakeit.Name(), Valid: true}
+		c.Class.ReqRace = sql.NullString{String: gofakeit.HipsterSentence(20), Valid: true}
+		c.Class.ReqWeaponProficiency = sql.NullString{String: gofakeit.HipsterSentence(20), Valid: true}
+		c.Class.ReqBaseAttackBonus = sql.NullString{String: gofakeit.HipsterSentence(20), Valid: true}
+		c.Class.ReqSkill = sql.NullString{String: gofakeit.HipsterSentence(20), Valid: true}
+		c.Class.ReqFeat = sql.NullString{String: gofakeit.HipsterSentence(20), Valid: true}
+		c.Class.ReqSpells = sql.NullString{String: gofakeit.HipsterSentence(20), Valid: true}
+		c.Class.ReqLanguages = sql.NullString{String: gofakeit.HipsterSentence(20), Valid: true}
+		c.Class.ReqPsionics = sql.NullString{String: gofakeit.HipsterSentence(20), Valid: true}
+		c.Class.ReqEpicFeat = sql.NullString{String: gofakeit.HipsterSentence(20), Valid: true}
+		c.Class.ReqSpecial = sql.NullString{String: gofakeit.HipsterSentence(20), Valid: true}
+		c.Class.SpellList1 = sql.NullString{String: gofakeit.HipsterWord(), Valid: true}
+		c.Class.SpellList2 = sql.NullString{String: gofakeit.HipsterWord(), Valid: true}
+		c.Class.SpellList3 = sql.NullString{String: gofakeit.HipsterWord(), Valid: true}
+		c.Class.SpellList4 = sql.NullString{String: gofakeit.HipsterWord(), Valid: true}
+		c.Class.SpellList5 = sql.NullString{String: gofakeit.HipsterWord(), Valid: true}
+		c.Class.FullText = sql.NullString{String: gofakeit.HipsterParagraph(4, 5, 200, "\n"), Valid: true}
+		c.Class.Reference = sql.NullString{String: gofakeit.NewCrypto().BuzzWord(), Valid: true}
+		fields := c.ExtractVars()
+		columns := make([]string, 0, len(fields))
+		rows := make([]interface{}, 0, len(fields))
+		for k, v := range fields {
+			columns = append(columns, k)
+			rows = append(rows, v)
+		}
+		sql, args, err := squirrel.Insert(ClassListTableName).Columns(columns...).Values(rows...).ToSql()
+		if err != nil {
+			err = tx.Rollback()
+			if err != nil {
+				log.Fatal(err)
+			}
+			log.Fatal(err)
+		}
+		_, err = tx.Exec(sql, args...)
+		if err != nil {
+			err = tx.Rollback()
+			if err != nil {
+				log.Fatal(err)
+			}
+
+			log.Fatal(err)
+		}
+
+	}
+	err = tx.Commit()
+	if err != nil {
+		err = tx.Rollback()
+		if err != nil {
+			log.Fatal(err)
+		}
+		log.Fatal(err)
+	}
+
 }
 
 // ExtractVars returns any non-null DB fields with the associated
