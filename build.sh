@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Define the name of your application
-APP_NAME="flamethrower-tui"
+APP_NAME="flamethrower-tui "
 
 # Define the main .go file
 MAIN_FILE="main.go"
