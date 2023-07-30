@@ -10,10 +10,18 @@ MAIN_FILE="main.go"
 VERSION=$(git describe --tags)
 
 # Function to build for a specific OS/ARCH
+# Function to build for a specific OS/ARCH
 build() {
   echo "Building for $1 $2..."
-  env GOOS=$1 GOARCH=$2 go build -ldflags "-X main.version=$VERSION" -o build/$APP_NAME-$1-$2 $MAIN_FILE
+  filename="${APP_NAME}-v${VERSION}-$1-$2"
+  if [[ $1 == "windows" ]]; then
+    filename="${filename}.exe"
+  elif [[ $1 == "darwin" ]]; then
+    filename="${filename}.bin"
+  fi
+  env GOOS=$1 GOARCH=$2 go build -ldflags "-X main.version=$VERSION" -o build/${filename} ${MAIN_FILE}
 }
+
 
 mkdir -p build
 

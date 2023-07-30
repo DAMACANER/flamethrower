@@ -43,15 +43,16 @@ jobs:
           release_name: Release ${{ github.ref }}
           body: "Automated release from CI."
           draft: false
-          prerelease: false
+          prerelease: true
+
       - name: Upload Linux Asset
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./build/flamethrower-tui-linux-amd64
-          asset_name: flamethrower-tui-linux-amd64
+          asset_path: ./build/flamethrower-tui-v${{ github.ref_name }}-linux-amd64
+          asset_name: flamethrower-tui-v${{ github.ref_name }}-linux-amd64
           asset_content_type: application/octet-stream
 
       - name: Upload Windows Asset
@@ -60,8 +61,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./build/flamethrower-tui-windows-amd64
-          asset_name: flamethrower-tui-windows-amd64
+          asset_path: ./build/flamethrower-tui-v${{ github.ref_name }}-windows-amd64.exe
+          asset_name: flamethrower-tui-v${{ github.ref_name }}-windows-amd64.exe
           asset_content_type: application/octet-stream
 
       - name: Upload MacOS Asset
@@ -70,6 +71,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./build/flamethrower-tui-darwin-amd64
-          asset_name: flamethrower-tui-darwin-amd64
+          asset_path: ./build/flamethrower-tui-v${{ github.ref_name }}-darwin-amd64.bin
+          asset_name: flamethrower-tui-v${{ github.ref_name }}-darwin-amd64.bin
           asset_content_type: application/octet-stream
