@@ -60,11 +60,19 @@ func ReturnClassDetailView(class db.ClassListColumns, app *tview.Application) *t
 	//
 	// navigation
 	//
-	var currentElement *Element
-
-	currentElement = elements[0][0]
+	currentElement := elements[0][0]
 
 	mainFlex.SetInputCapture(TraverseBoxes(currentElement, elements, app))
+	app.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
+
+		switch event.Key() {
+		case tcell.KeyHome:
+			app.SetRoot(ReturnClassView(app), true)
+		}
+
+		return event
+	})
+
 	return mainFlex
 
 }
@@ -79,10 +87,8 @@ func classDetailFooter() *tview.TextView {
 
 	footer.SetBorder(true).SetBorderAttributes(tcell.AttrDim)
 
-	fmt.Fprintf(footer, "[white]↵ Enter: [red] Confirm Class \n ")
-	fmt.Fprintf(footer, "[white]W A S D: [red]Change Focus ")
-	fmt.Fprintf(footer, "[white]↑↓: [red]Scroll Up/Down in Focused Box ")
-	fmt.Fprintf(footer, "[white]Q: [red]Quit \n")
+	fmt.Fprintf(footer, "[white]W A S D: [red]Change Focus [white]↑↓: [red]Scroll Up/Down in Focused Box \n")
+	fmt.Fprintf(footer, "[white]↵ Enter: [red]Confirm Class [white]Q: [red]Quit [white]Home: [red]Previous Page \n")
 	return footer
 }
 

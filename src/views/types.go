@@ -3,8 +3,13 @@ package views
 import (
 	"github.com/gdamore/tcell/v2"
 	"github.com/rivo/tview"
+	"github.com/xuri/excelize/v2"
 )
 
+type Application struct {
+	App   *tview.Application
+	Sheet *excelize.File
+}
 type Element struct {
 	View       tview.Primitive
 	ParentFlex *tview.Flex
