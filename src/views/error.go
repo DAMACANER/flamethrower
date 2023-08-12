@@ -16,7 +16,7 @@ func returnErrorView(app *tview.Application, errorMessage string) *tview.Flex {
 
 	// vertical centering
 	vFlex.AddItem(tview.NewBox(), 0, 1, false)
-	vFlex.AddItem(modal, 1, 0, false)
+	vFlex.AddItem(modal, 0, 2, false)
 	vFlex.AddItem(tview.NewBox(), 0, 1, false)
 
 	// horizontal centering

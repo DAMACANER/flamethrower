@@ -55,7 +55,7 @@ func ReturnClassView(app *tview.Application) *tview.Flex {
 
 			go func() {
 				CurrentPageNumber++
-				stmt = SELECT(table.Class.Name).
+				stmt = SELECT(table.Class.AllColumns).
 					FROM(table.Class).
 					LIMIT(PageSize).
 					OFFSET(CurrentPageNumber * PageSize).
