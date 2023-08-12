@@ -95,13 +95,27 @@ func classDetailGeneralStats(class model.Class) *tview.TextView {
 	generalStatsView.SetBorder(true)
 	generalStatsView.SetTitle(fmt.Sprintf("Stat Sheet of [green] %s", class.Name))
 	fmt.Fprintf(generalStatsView, "[white]Name: [skyblue]%v\n\n", class.Name)
-	fmt.Fprintf(generalStatsView, "[white]Hit Die: [skyblue]%v\n\n", *class.HitDie)
-	fmt.Fprintf(generalStatsView, "[white]Skill Points: [skyblue]%v\n\n", *class.SkillPoints)
-	fmt.Fprintf(generalStatsView, "[white]Skill Points Ability: [skyblue]%v\n\n", *class.SkillPointsAbility)
-	fmt.Fprintf(generalStatsView, "[white]Class Skills: [skyblue]%v\n\n", *class.ClassSkills)
-	fmt.Fprintf(generalStatsView, "[white]Weapon and Armor Proficiencies: [skyblue]%v\n\n", *class.Proficiencies)
-	fmt.Fprintf(generalStatsView, "[white]Alignment: [skyblue]%v\n\n", *class.Alignment)
-	fmt.Fprintf(generalStatsView, "[white]Source: [skyblue]%v\n\n", *class.Reference)
+	if notEmpty(class.HitDie) {
+		fmt.Fprintf(generalStatsView, "[white]Hit Die: [skyblue]%v\n\n", *class.HitDie)
+	}
+	if notEmpty(class.SkillPoints) {
+		fmt.Fprintf(generalStatsView, "[white]Skill Points: [skyblue]%v\n\n", *class.SkillPoints)
+	}
+	if notEmpty(class.SkillPointsAbility) {
+		fmt.Fprintf(generalStatsView, "[white]Skill Points Ability: [skyblue]%v\n\n", *class.SkillPointsAbility)
+	}
+	if notEmpty(class.ClassSkills) {
+		fmt.Fprintf(generalStatsView, "[white]Class Skills: [skyblue]%v\n\n", *class.ClassSkills)
+	}
+	if notEmpty(class.Proficiencies) {
+		fmt.Fprintf(generalStatsView, "[white]Weapon and Armor Proficiencies: [skyblue]%v\n\n", *class.Proficiencies)
+	}
+	if notEmpty(class.Alignment) {
+		fmt.Fprintf(generalStatsView, "[white]Alignment: [skyblue]%v\n\n", *class.Alignment)
+	}
+	if notEmpty(class.Reference) {
+		fmt.Fprintf(generalStatsView, "[white]Source: [skyblue]%v\n\n", *class.Reference)
+	}
 
 	return generalStatsView
 }
@@ -114,14 +128,22 @@ func classDetailsEpicFeat(class model.Class) *tview.TextView {
 		SetWordWrap(true)
 	epicView.SetBorder(true)
 	epicView.SetTitle("Epic Stat List")
-	fmt.Fprintf(epicView, "[white]Epic Feat Base Level: [skyblue]%v\n\n", *class.EpicFeatBaseLevel)
-	fmt.Fprintf(epicView, "[white]Epic Feat Interval: [skyblue]%v\n\n", *class.EpicFeatInterval)
-	fmt.Fprintf(epicView, "[white]Epic Feat List: [skyblue]%v\n\n", *class.EpicFeatList)
-	epicFullTextPlain, err := html2text.FromString(fmt.Sprintf("%v", *class.EpicFullText))
-	if err != nil {
-		log.Fatal(err)
+	if notEmpty(class.EpicFeatBaseLevel) {
+		fmt.Fprintf(epicView, "[white]Epic Feat Base Level: [skyblue]%v\n\n", *class.EpicFeatBaseLevel)
 	}
-	fmt.Fprintf(epicView, "[white]Epic Full Text: \n [skyblue]%s\n\n", epicFullTextPlain)
+	if notEmpty(class.EpicFeatInterval) {
+		fmt.Fprintf(epicView, "[white]Epic Feat Interval: [skyblue]%v\n\n", *class.EpicFeatInterval)
+	}
+	if notEmpty(class.EpicFeatList) {
+		fmt.Fprintf(epicView, "[white]Epic Feat List: [skyblue]%v\n\n", *class.EpicFeatList)
+	}
+	if notEmpty(class.EpicFullText) {
+		epicFullTextPlain, err := html2text.FromString(fmt.Sprintf("%v", *class.EpicFullText))
+		if err != nil {
+			log.Fatal(err)
+		}
+		fmt.Fprintf(epicView, "[white]Epic Full Text: \n [skyblue]%s\n\n", epicFullTextPlain)
+	}
 	return epicView
 }
 
@@ -133,14 +155,38 @@ func classDetailsPrerequirements(class model.Class) *tview.TextView {
 		SetWordWrap(true)
 	preReqView.SetBorder(true)
 	preReqView.SetTitle("Prerequisites")
-	fmt.Fprintf(preReqView, "[white]Required Race: [skyblue]%v\n\n", *class.ReqRace)
-	fmt.Fprintf(preReqView, "[white]Required Feat: [skyblue]%v\n\n", *class.ReqFeat)
-	fmt.Fprintf(preReqView, "[white]Required Skill: [skyblue]%v\n\n", *class.ReqSkill)
-	fmt.Fprintf(preReqView, "[white]Required Weapon Proficiency: [skyblue]%v\n\n", *class.ReqWeaponProficiency)
-	fmt.Fprintf(preReqView, "[white]Required Base Attack Bonus: [skyblue]%v\n\n", *class.ReqBaseAttackBonus)
-	fmt.Fprintf(preReqView, "[white]Required Psionics: [skyblue]%v\n\n", *class.ReqPsionics)
-	fmt.Fprintf(preReqView, "[white]Required Spells: [skyblue]%v\n\n", *class.ReqSpells)
+	if notEmpty(class.ReqRace) {
+		fmt.Fprintf(preReqView, "[white]Required Race: [skyblue]%v\n\n", *class.ReqRace)
+	}
+	if notEmpty(class.ReqFeat) {
+		fmt.Fprintf(preReqView, "[white]Required Feat: [skyblue]%v\n\n", *class.ReqFeat)
+	}
+	if notEmpty(class.ReqSkill) {
+		fmt.Fprintf(preReqView, "[white]Required Skill: [skyblue]%v\n\n", *class.ReqSkill)
+	}
+	if notEmpty(class.ReqWeaponProficiency) {
+		fmt.Fprintf(preReqView, "[white]Required Weapon Proficiency: [skyblue]%v\n\n", *class.ReqWeaponProficiency)
+	}
+	if notEmpty(class.ReqBaseAttackBonus) {
+		fmt.Fprintf(preReqView, "[white]Required Base Attack Bonus: [skyblue]%v\n\n", *class.ReqBaseAttackBonus)
+	}
+	if notEmpty(class.ReqPsionics) {
+		fmt.Fprintf(preReqView, "[white]Required Psionics: [skyblue]%v\n\n", *class.ReqPsionics)
+	}
+	if notEmpty(class.ReqSpells) {
+		fmt.Fprintf(preReqView, "[white]Required Spells: [skyblue]%v\n\n", *class.ReqSpells)
+	}
+	if notEmpty(class.ReqEpicFeat) {
+		fmt.Fprintf(preReqView, "[white]Required Epic Feat: [skyblue]%v\n\n", *class.ReqEpicFeat)
+	}
+	if notEmpty(class.ReqSpecial) {
+		fmt.Fprintf(preReqView, "[white]Required Special: [skyblue]%v\n\n", *class.ReqSpecial)
+	}
+	if notEmpty(class.ReqPsionics) {
+		fmt.Fprintf(preReqView, "[white]Required Psionic Power: [skyblue]%v\n\n", *class.ReqPsionics)
+	}
 	return preReqView
+
 }
 
 func classDetailsSpells(class model.Class) *tview.TextView {
@@ -150,12 +196,27 @@ func classDetailsSpells(class model.Class) *tview.TextView {
 		SetWrap(true).
 		SetWordWrap(true)
 	spellsView.SetBorder(true).SetTitle("Spell List")
-	fmt.Fprintf(spellsView, "[white]Spell Statistics: [skyblue]%v\n\n", *class.SpellStat)
-	fmt.Fprintf(spellsView, "[white]Spells List - 1: [skyblue]%v\n\n", *class.SpellList1)
-	fmt.Fprintf(spellsView, "[white]Spells List - 2: [skyblue]%v\n\n", *class.SpellList2)
-	fmt.Fprintf(spellsView, "[white]Spells List - 3: [skyblue]%v\n\n", *class.SpellList3)
-	fmt.Fprintf(spellsView, "[white]Spells List - 4: [skyblue]%v\n\n", *class.SpellList4)
-	fmt.Fprintf(spellsView, "[white]Spells List - 5: [skyblue]%v\n\n", *class.SpellList5)
+	if notEmpty(class.SpellStat) {
+		fmt.Fprintf(spellsView, "[white]Spell Statistics: [skyblue]%v\n\n", *class.SpellStat)
+	}
+	if notEmpty(class.SpellType) {
+		fmt.Fprintf(spellsView, "[white]Spell Type: [skyblue]%v\n\n", *class.SpellType)
+	}
+	if notEmpty(class.SpellList1) {
+		fmt.Fprintf(spellsView, "[white]Spells List - 1: [skyblue]%v\n\n", *class.SpellList1)
+	}
+	if notEmpty(class.SpellList2) {
+		fmt.Fprintf(spellsView, "[white]Spells List - 2: [skyblue]%v\n\n", *class.SpellList2)
+	}
+	if notEmpty(class.SpellList3) {
+		fmt.Fprintf(spellsView, "[white]Spells List - 3: [skyblue]%v\n\n", *class.SpellList3)
+	}
+	if notEmpty(class.SpellList4) {
+		fmt.Fprintf(spellsView, "[white]Spells List - 4: [skyblue]%v\n\n", *class.SpellList4)
+	}
+	if notEmpty(class.SpellList5) {
+		fmt.Fprintf(spellsView, "[white]Spells List - 5: [skyblue]%v\n\n", *class.SpellList5)
+	}
 	return spellsView
 
 }
