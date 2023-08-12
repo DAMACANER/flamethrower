@@ -2,7 +2,7 @@ package main
 
 import (
 	"flag"
-	"flamethrower/src/db"
+	"flamethrower/src/engine"
 	"flamethrower/src/views"
 	"fmt"
 	"log"
@@ -16,7 +16,7 @@ var DBLocation = flag.String("db", "dnd35.db", "Location of the database file")
 
 func init() {
 	flag.Parse()
-	db.InitDB(*DBLocation)
+	engine.InitDB(DBLocation)
 }
 func main() {
 	f, err := excelize.OpenFile("sheet.xlsx")

@@ -11,7 +11,7 @@ package table
 // this method only once at the beginning of the program.
 func UseSchema(schema string) {
 	Class = Class.FromSchema(schema)
-	ClassTable = ClassTable.FromSchema(schema)
+	ClassLevelTable = ClassLevelTable.FromSchema(schema)
 	Domain = Domain.FromSchema(schema)
 	Equipment = Equipment.FromSchema(schema)
 	Feat = Feat.FromSchema(schema)

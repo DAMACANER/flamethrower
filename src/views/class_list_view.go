@@ -1,10 +1,9 @@
 package views
 
 import (
-	"flamethrower/src/db"
 	"flamethrower/src/db/model"
 	"flamethrower/src/db/table"
-	"log"
+	"flamethrower/src/engine"
 	"sync"
 
 	"github.com/gdamore/tcell/v2"
@@ -21,10 +20,8 @@ func ReturnClassView(app *tview.Application) *tview.Flex {
 		OFFSET(CurrentPageNumber * PageSize).
 		ORDER_BY(table.Class.Name.ASC())
 	var data []model.Class
-	err := stmt.Query(db.DB, &data)
-	if err != nil {
-		return ReturnErrorView(app, err.Error())
-	}	
+	err := stmt.Query(engine.DB, &data)
+	HandleError(err, app)
 	list := tview.NewList()
 
 	title := tview.NewTextView()
@@ -35,12 +32,10 @@ func ReturnClassView(app *tview.Application) *tview.Flex {
 		list.AddItem(skill.Name, "", rune(i), nil)
 	}
 	var cnt int
-	stmt = SELECT(COUNT(table.Class.ID)).
-		FROM(table.Class)
-	err = stmt.Query(db.DB, &cnt)
-	if err != nil {
-		log.Fatal(err)
-	}
+
+	query, args := SELECT(COUNT(table.Class.ID)).FROM(table.Class).Sql()
+	err = engine.DB.QueryRow(query, args...).Scan(&cnt)
+	HandleError(err, app)
 	fetchingNewData := false
 	var fetchingMutex sync.Mutex
 
@@ -66,13 +61,8 @@ func ReturnClassView(app *tview.Application) *tview.Flex {
 					OFFSET(CurrentPageNumber * PageSize).
 					ORDER_BY(table.Class.Name.ASC())
 				var newData []model.Class
-				err = stmt.Query(db.DB, &newData)
-				if err != nil {
-					app.QueueUpdateDraw(func() {
-						app.SetRoot(ReturnErrorView(app, err.Error()), true)
-					})
-					return
-				}
+				err = stmt.Query(engine.DB, &newData)
+				HandleError(err, app)
 				app.QueueUpdateDraw(func() {
 					for i, newSkill := range newData {
 						list.AddItem(newSkill.Name, "", rune(len(data)+i), nil)

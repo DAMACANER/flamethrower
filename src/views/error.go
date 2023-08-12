@@ -2,7 +2,7 @@ package views
 
 import "github.com/rivo/tview"
 
-func ReturnErrorView(app *tview.Application, errorMessage string) *tview.Flex {
+func returnErrorView(app *tview.Application, errorMessage string) *tview.Flex {
 	modal := tview.NewModal().
 		SetText(errorMessage).
 		AddButtons([]string{"OK"}).
@@ -25,4 +25,10 @@ func ReturnErrorView(app *tview.Application, errorMessage string) *tview.Flex {
 	hFlex.AddItem(vFlex, 0, 2, true)
 	hFlex.AddItem(tview.NewBox(), 0, 1, false)
 	return hFlex
+}
+
+func HandleError(err error, app *tview.Application) {
+	if err != nil {
+		app.SetRoot(returnErrorView(app, err.Error()), true)
+	}
 }

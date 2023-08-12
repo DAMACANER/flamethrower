@@ -94,12 +94,14 @@ func classDetailGeneralStats(class model.Class) *tview.TextView {
 		SetRegions(true)
 	generalStatsView.SetBorder(true)
 	generalStatsView.SetTitle(fmt.Sprintf("Stat Sheet of [green] %s", class.Name))
-	fmt.Fprintf(generalStatsView, "[white]Name: [blue]%v\n\n", class.Name)
-	fmt.Fprintf(generalStatsView, "[white]Hit Die: [blue]%v\n\n", class.HitDie)
-	fmt.Fprintf(generalStatsView, "[white]Skill Points: [blue]%v\n\n", class.SkillPoints)
-	fmt.Fprintf(generalStatsView, "[white]Skill Points Ability: [blue]%v\n\n", class.SkillPointsAbility)
-	fmt.Fprintf(generalStatsView, "[white]Class Skills: [blue]%v\n\n", class.ClassSkills)
-	fmt.Fprintf(generalStatsView, "[white]Weapon and Armor Proficiencies: [blue]%v\n\n", class.Proficiencies)
+	fmt.Fprintf(generalStatsView, "[white]Name: [skyblue]%v\n\n", class.Name)
+	fmt.Fprintf(generalStatsView, "[white]Hit Die: [skyblue]%v\n\n", *class.HitDie)
+	fmt.Fprintf(generalStatsView, "[white]Skill Points: [skyblue]%v\n\n", *class.SkillPoints)
+	fmt.Fprintf(generalStatsView, "[white]Skill Points Ability: [skyblue]%v\n\n", *class.SkillPointsAbility)
+	fmt.Fprintf(generalStatsView, "[white]Class Skills: [skyblue]%v\n\n", *class.ClassSkills)
+	fmt.Fprintf(generalStatsView, "[white]Weapon and Armor Proficiencies: [skyblue]%v\n\n", *class.Proficiencies)
+	fmt.Fprintf(generalStatsView, "[white]Alignment: [skyblue]%v\n\n", *class.Alignment)
+	fmt.Fprintf(generalStatsView, "[white]Source: [skyblue]%v\n\n", *class.Reference)
 
 	return generalStatsView
 }
@@ -112,10 +114,10 @@ func classDetailsEpicFeat(class model.Class) *tview.TextView {
 		SetWordWrap(true)
 	epicView.SetBorder(true)
 	epicView.SetTitle("Epic Stat List")
-	fmt.Fprintf(epicView, "[white]Epic Feat Base Level: [blue]%v\n\n", class.EpicFeatBaseLevel)
-	fmt.Fprintf(epicView, "[white]Epic Feat Interval: [blue]%v\n\n", class.EpicFeatInterval)
-	fmt.Fprintf(epicView, "[white]Epic Feat List: [blue]%v\n\n", class.EpicFeatList)
-	epicFullTextPlain, err := html2text.FromString(fmt.Sprintf("%v", class.EpicFullText))
+	fmt.Fprintf(epicView, "[white]Epic Feat Base Level: [skyblue]%v\n\n", *class.EpicFeatBaseLevel)
+	fmt.Fprintf(epicView, "[white]Epic Feat Interval: [skyblue]%v\n\n", *class.EpicFeatInterval)
+	fmt.Fprintf(epicView, "[white]Epic Feat List: [skyblue]%v\n\n", *class.EpicFeatList)
+	epicFullTextPlain, err := html2text.FromString(fmt.Sprintf("%v", *class.EpicFullText))
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -131,13 +133,13 @@ func classDetailsPrerequirements(class model.Class) *tview.TextView {
 		SetWordWrap(true)
 	preReqView.SetBorder(true)
 	preReqView.SetTitle("Prerequisites")
-	fmt.Fprintf(preReqView, "[white]Required Race: [blue]%v\n\n", class.ReqRace)
-	fmt.Fprintf(preReqView, "[white]Required Feat: [blue]%v\n\n", class.ReqFeat)
-	fmt.Fprintf(preReqView, "[white]Required Skill: [blue]%v\n\n", class.ReqSkill)
-	fmt.Fprintf(preReqView, "[white]Required Weapon Proficiency: [blue]%v\n\n", class.ReqWeaponProficiency)
-	fmt.Fprintf(preReqView, "[white]Required Base Attack Bonus: [blue]%v\n\n", class.ReqBaseAttackBonus)
-	fmt.Fprintf(preReqView, "[white]Required Psionics: [blue]%v\n\n", class.ReqPsionics)
-	fmt.Fprintf(preReqView, "[white]Required Spells: [blue]%v\n\n", class.ReqSpells)
+	fmt.Fprintf(preReqView, "[white]Required Race: [skyblue]%v\n\n", *class.ReqRace)
+	fmt.Fprintf(preReqView, "[white]Required Feat: [skyblue]%v\n\n", *class.ReqFeat)
+	fmt.Fprintf(preReqView, "[white]Required Skill: [skyblue]%v\n\n", *class.ReqSkill)
+	fmt.Fprintf(preReqView, "[white]Required Weapon Proficiency: [skyblue]%v\n\n", *class.ReqWeaponProficiency)
+	fmt.Fprintf(preReqView, "[white]Required Base Attack Bonus: [skyblue]%v\n\n", *class.ReqBaseAttackBonus)
+	fmt.Fprintf(preReqView, "[white]Required Psionics: [skyblue]%v\n\n", *class.ReqPsionics)
+	fmt.Fprintf(preReqView, "[white]Required Spells: [skyblue]%v\n\n", *class.ReqSpells)
 	return preReqView
 }
 
@@ -148,12 +150,12 @@ func classDetailsSpells(class model.Class) *tview.TextView {
 		SetWrap(true).
 		SetWordWrap(true)
 	spellsView.SetBorder(true).SetTitle("Spell List")
-	fmt.Fprintf(spellsView, "[white]Spell Statistics: [blue]%v\n\n", class.SpellStat)
-	fmt.Fprintf(spellsView, "[white]Spells List - 1: [blue]%v\n\n", class.SpellList1)
-	fmt.Fprintf(spellsView, "[white]Spells List - 2: [blue]%v\n\n", class.SpellList2)
-	fmt.Fprintf(spellsView, "[white]Spells List - 3: [blue]%v\n\n", class.SpellList3)
-	fmt.Fprintf(spellsView, "[white]Spells List - 4: [blue]%v\n\n", class.SpellList4)
-	fmt.Fprintf(spellsView, "[white]Spells List - 5: [blue]%v\n\n", class.SpellList5)
+	fmt.Fprintf(spellsView, "[white]Spell Statistics: [skyblue]%v\n\n", *class.SpellStat)
+	fmt.Fprintf(spellsView, "[white]Spells List - 1: [skyblue]%v\n\n", *class.SpellList1)
+	fmt.Fprintf(spellsView, "[white]Spells List - 2: [skyblue]%v\n\n", *class.SpellList2)
+	fmt.Fprintf(spellsView, "[white]Spells List - 3: [skyblue]%v\n\n", *class.SpellList3)
+	fmt.Fprintf(spellsView, "[white]Spells List - 4: [skyblue]%v\n\n", *class.SpellList4)
+	fmt.Fprintf(spellsView, "[white]Spells List - 5: [skyblue]%v\n\n", *class.SpellList5)
 	return spellsView
 
 }
