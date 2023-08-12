@@ -2,27 +2,29 @@ package views
 
 import (
 	"flamethrower/src/db"
+	"flamethrower/src/db/model"
+	"flamethrower/src/db/table"
 	"log"
+	"sync"
 
-	"github.com/blockloop/scan"
 	"github.com/gdamore/tcell/v2"
+	. "github.com/go-jet/jet/v2/sqlite"
 	"github.com/rivo/tview"
 )
 
 func ReturnClassView(app *tview.Application) *tview.Flex {
-	var PageSize uint64 = DefaultPageSize
-	var CurrentPageNumber uint64 = DefaultStartingPageNumber
-	repo := &db.ClassListRepo{BaseRepo: &db.BaseRepo{}}
-	rows, err := repo.Find().Paginate(CurrentPageNumber, PageSize).OrderBy("name COLLATE NOCASE").Query()
+	var PageSize int64 = DefaultPageSize
+	var CurrentPageNumber int64 = DefaultStartingPageNumber
+	stmt := SELECT(table.Class.AllColumns).
+		FROM(table.Class).
+		LIMIT(PageSize).
+		OFFSET(CurrentPageNumber * PageSize).
+		ORDER_BY(table.Class.Name.ASC())
+	var data []model.Class
+	err := stmt.Query(db.DB, &data)
 	if err != nil {
-		log.Fatal(err)
-	}
-	var data []db.ClassListColumns
-	err = scan.Rows(&data, rows)
-	if err != nil {
-		log.Fatal(err)
-	}
-
+		return ReturnErrorView(app, err.Error())
+	}	
 	list := tview.NewList()
 
 	title := tview.NewTextView()
@@ -30,37 +32,55 @@ func ReturnClassView(app *tview.Application) *tview.Flex {
 	title.SetTextAlign(tview.AlignCenter)
 
 	for i, skill := range data {
-		list.AddItem(skill.Name.String, "", rune(i), nil)
+		list.AddItem(skill.Name, "", rune(i), nil)
 	}
-	cnt, err := repo.Find().Count().Query()
-	if err != nil {
-		log.Fatal(err)
-	}
-	err = scan.Row(&db.TotalClassCount, cnt)
+	var cnt int
+	stmt = SELECT(COUNT(table.Class.ID)).
+		FROM(table.Class)
+	err = stmt.Query(db.DB, &cnt)
 	if err != nil {
 		log.Fatal(err)
 	}
 	fetchingNewData := false
+	var fetchingMutex sync.Mutex
+
 	list.SetChangedFunc(func(index int, mainText string, secondaryText string, shortcut rune) {
-		if index >= len(data)-1 && len(data) < int(db.TotalClassCount) && !fetchingNewData {
+		fetchingMutex.Lock()
+		nearEnd := index >= len(data)-int(PageSize)/5
+		fetchingMutex.Unlock()
+
+		if nearEnd && len(data) < cnt {
+			fetchingMutex.Lock()
+			if fetchingNewData {
+				fetchingMutex.Unlock()
+				return
+			}
 			fetchingNewData = true
+			fetchingMutex.Unlock()
+
 			go func() {
 				CurrentPageNumber++
-				rows, err := repo.Find().Paginate(CurrentPageNumber, PageSize).OrderBy("name COLLATE NOCASE").Query()
+				stmt = SELECT(table.Class.Name).
+					FROM(table.Class).
+					LIMIT(PageSize).
+					OFFSET(CurrentPageNumber * PageSize).
+					ORDER_BY(table.Class.Name.ASC())
+				var newData []model.Class
+				err = stmt.Query(db.DB, &newData)
 				if err != nil {
-					log.Fatal(err)
-				}
-				var newData []db.ClassListColumns
-				err = scan.Rows(&newData, rows)
-				if err != nil {
-					log.Fatal(err)
+					app.QueueUpdateDraw(func() {
+						app.SetRoot(ReturnErrorView(app, err.Error()), true)
+					})
+					return
 				}
 				app.QueueUpdateDraw(func() {
 					for i, newSkill := range newData {
-						list.AddItem(newSkill.Name.String, "", rune(len(data)+i), nil)
+						list.AddItem(newSkill.Name, "", rune(len(data)+i), nil)
 					}
 					data = append(data, newData...)
+					fetchingMutex.Lock()
 					fetchingNewData = false
+					fetchingMutex.Unlock()
 				})
 			}()
 		}
@@ -86,16 +106,10 @@ func ReturnClassView(app *tview.Application) *tview.Flex {
 		SetText("[yellow]Q to quit")
 
 	app.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
-		// Key() returns the key code, e.g. tcell.KeyUp
-		// Rune() returns the key as a rune, e.g. 'q'
-		// Modifiers() returns a bitmask representing shift, ctrl, etc.
-
 		ch := event.Rune()
-
 		if ch == 'q' || ch == 'Q' {
 			app.Stop()
 		}
-		// Return event to continue processing it.
 		return event
 	})
 
@@ -114,5 +128,4 @@ func ReturnClassView(app *tview.Application) *tview.Flex {
 	hFlex.AddItem(vFlex, 0, 2, true)
 	hFlex.AddItem(tview.NewBox(), 0, 1, false)
 	return hFlex
-
 }

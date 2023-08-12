@@ -1,27 +1,23 @@
 package views
 
 import (
-	"database/sql"
-	"flamethrower/src/db"
+	"flamethrower/src/db/model"
 	"fmt"
 	"log"
-	"reflect"
-	"strings"
 
 	"github.com/gdamore/tcell/v2"
 	"github.com/rivo/tview"
 	"jaytaylor.com/html2text"
 )
 
-func ReturnClassDetailView(class db.ClassListColumns, app *tview.Application) *tview.Flex {
+func ReturnClassDetailView(class model.Class, app *tview.Application) *tview.Flex {
 	//
 	// views
 	//
-	val := reflect.ValueOf(class)
 	epicView := classDetailsEpicFeat(class)
-	generalStatsView := classDetailGeneralStats(val, class.Name)
+	generalStatsView := classDetailGeneralStats(class)
 	footerView := classDetailFooter()
-	preReqView := classDetailsPrerequirements(val)
+	preReqView := classDetailsPrerequirements(class)
 	spellsView := classDetailsSpells(class)
 	//
 	// flexes
@@ -92,38 +88,23 @@ func classDetailFooter() *tview.TextView {
 	return footer
 }
 
-func classDetailGeneralStats(val reflect.Value, className sql.NullString) *tview.TextView {
+func classDetailGeneralStats(class model.Class) *tview.TextView {
 	generalStatsView := tview.NewTextView().
 		SetDynamicColors(true).
 		SetRegions(true)
 	generalStatsView.SetBorder(true)
-	generalStatsView.SetTitle(fmt.Sprintf("Stat Sheet of [green] %s", className.String))
-	typeOfS := val.Type()
+	generalStatsView.SetTitle(fmt.Sprintf("Stat Sheet of [green] %s", class.Name))
+	fmt.Fprintf(generalStatsView, "[white]Name: [blue]%v\n\n", class.Name)
+	fmt.Fprintf(generalStatsView, "[white]Hit Die: [blue]%v\n\n", class.HitDie)
+	fmt.Fprintf(generalStatsView, "[white]Skill Points: [blue]%v\n\n", class.SkillPoints)
+	fmt.Fprintf(generalStatsView, "[white]Skill Points Ability: [blue]%v\n\n", class.SkillPointsAbility)
+	fmt.Fprintf(generalStatsView, "[white]Class Skills: [blue]%v\n\n", class.ClassSkills)
+	fmt.Fprintf(generalStatsView, "[white]Weapon and Armor Proficiencies: [blue]%v\n\n", class.Proficiencies)
 
-	for i := 0; i < val.NumField(); i++ {
-		if !strings.Contains(typeOfS.Field(i).Name, "Epic") && !strings.Contains(typeOfS.Field(i).Name, "Req") && !strings.Contains(typeOfS.Field(i).Name, "FullText") {
-			if reflect.TypeOf(val.Field(i).Interface()) == reflect.TypeOf(sql.NullString{}) {
-				if val.Field(i).Interface().(sql.NullString).Valid {
-					fmt.Fprintf(generalStatsView, "[white]%s: [blue]%s\n\n", typeOfS.Field(i).Name, val.Field(i).Interface().(sql.NullString).String)
-				}
-			} else if reflect.TypeOf(val.Field(i).Interface()) == reflect.TypeOf(sql.NullInt16{}) {
-				if val.Field(i).Interface().(sql.NullInt16).Valid {
-					fmt.Fprintf(generalStatsView, "[white]%s: [blue]%d\n\n", typeOfS.Field(i).Name, val.Field(i).Interface().(sql.NullInt16).Int16)
-				}
-			}
-		} else if strings.Contains(typeOfS.Field(i).Name, "FullText") && !strings.Contains(typeOfS.Field(i).Name, "Epic") {
-			fullTextPlain, err := html2text.FromString(val.Field(i).Interface().(sql.NullString).String)
-			if err != nil {
-				log.Fatal(err)
-			}
-			fmt.Fprintf(generalStatsView, "[white]%s: \n [skyblue]%s\n\n", typeOfS.Field(i).Name, fullTextPlain)
-		}
-
-	}
 	return generalStatsView
 }
 
-func classDetailsEpicFeat(class db.ClassListColumns) *tview.TextView {
+func classDetailsEpicFeat(class model.Class) *tview.TextView {
 	epicView := tview.NewTextView().
 		SetDynamicColors(true).
 		SetRegions(true).
@@ -131,10 +112,10 @@ func classDetailsEpicFeat(class db.ClassListColumns) *tview.TextView {
 		SetWordWrap(true)
 	epicView.SetBorder(true)
 	epicView.SetTitle("Epic Stat List")
-	fmt.Fprintf(epicView, "[white]Epic Feat Base Level: [blue]%s\n\n", class.EpicFeatBaseLevel.String)
-	fmt.Fprintf(epicView, "[white]Epic Feat Interval: [blue]%s\n\n", class.EpicFeatInterval.String)
-	fmt.Fprintf(epicView, "[white]Epic Feat List: [blue]%s\n\n", class.EpicFeatList.String)
-	epicFullTextPlain, err := html2text.FromString(class.EpicFullText.String)
+	fmt.Fprintf(epicView, "[white]Epic Feat Base Level: [blue]%v\n\n", class.EpicFeatBaseLevel)
+	fmt.Fprintf(epicView, "[white]Epic Feat Interval: [blue]%v\n\n", class.EpicFeatInterval)
+	fmt.Fprintf(epicView, "[white]Epic Feat List: [blue]%v\n\n", class.EpicFeatList)
+	epicFullTextPlain, err := html2text.FromString(fmt.Sprintf("%v", class.EpicFullText))
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -142,45 +123,37 @@ func classDetailsEpicFeat(class db.ClassListColumns) *tview.TextView {
 	return epicView
 }
 
-func classDetailsPrerequirements(val reflect.Value) *tview.TextView {
+func classDetailsPrerequirements(class model.Class) *tview.TextView {
 	preReqView := tview.NewTextView().
 		SetDynamicColors(true).
 		SetRegions(true).
 		SetWrap(true).
 		SetWordWrap(true)
 	preReqView.SetBorder(true)
-	typeOfS := val.Type()
-	for i := 0; i < val.NumField(); i++ {
-		if strings.Contains(typeOfS.Field(i).Name, "Req") {
-			if reflect.TypeOf(val.Field(i).Interface()) == reflect.TypeOf(sql.NullString{}) {
-				if val.Field(i).Interface().(sql.NullString).Valid {
-					fmt.Fprintf(preReqView, "[white]%s: [blue]%s\n\n", typeOfS.Field(i).Name, val.Field(i).Interface().(sql.NullString).String)
-				}
-			}
-		}
-	}
 	preReqView.SetTitle("Prerequisites")
+	fmt.Fprintf(preReqView, "[white]Required Race: [blue]%v\n\n", class.ReqRace)
+	fmt.Fprintf(preReqView, "[white]Required Feat: [blue]%v\n\n", class.ReqFeat)
+	fmt.Fprintf(preReqView, "[white]Required Skill: [blue]%v\n\n", class.ReqSkill)
+	fmt.Fprintf(preReqView, "[white]Required Weapon Proficiency: [blue]%v\n\n", class.ReqWeaponProficiency)
+	fmt.Fprintf(preReqView, "[white]Required Base Attack Bonus: [blue]%v\n\n", class.ReqBaseAttackBonus)
+	fmt.Fprintf(preReqView, "[white]Required Psionics: [blue]%v\n\n", class.ReqPsionics)
+	fmt.Fprintf(preReqView, "[white]Required Spells: [blue]%v\n\n", class.ReqSpells)
 	return preReqView
 }
 
-func classDetailsSpells(class db.ClassListColumns) *tview.TextView {
+func classDetailsSpells(class model.Class) *tview.TextView {
 	spellsView := tview.NewTextView().
 		SetDynamicColors(true).
 		SetRegions(true).
 		SetWrap(true).
 		SetWordWrap(true)
 	spellsView.SetBorder(true).SetTitle("Spell List")
-	val := reflect.ValueOf(class)
-	typeOfS := val.Type()
-	for i := 0; i < val.NumField(); i++ {
-		if strings.Contains(typeOfS.Field(i).Name, "SpellList") || strings.Contains(typeOfS.Field(i).Name, "SpellType") {
-			if reflect.TypeOf(val.Field(i).Interface()) == reflect.TypeOf(sql.NullString{}) {
-				if val.Field(i).Interface().(sql.NullString).Valid {
-					fmt.Fprintf(spellsView, "[white]%s: [blue]%s\n\n", typeOfS.Field(i).Name, val.Field(i).Interface().(sql.NullString).String)
-				}
-			}
-		}
-	}
+	fmt.Fprintf(spellsView, "[white]Spell Statistics: [blue]%v\n\n", class.SpellStat)
+	fmt.Fprintf(spellsView, "[white]Spells List - 1: [blue]%v\n\n", class.SpellList1)
+	fmt.Fprintf(spellsView, "[white]Spells List - 2: [blue]%v\n\n", class.SpellList2)
+	fmt.Fprintf(spellsView, "[white]Spells List - 3: [blue]%v\n\n", class.SpellList3)
+	fmt.Fprintf(spellsView, "[white]Spells List - 4: [blue]%v\n\n", class.SpellList4)
+	fmt.Fprintf(spellsView, "[white]Spells List - 5: [blue]%v\n\n", class.SpellList5)
 	return spellsView
 
 }

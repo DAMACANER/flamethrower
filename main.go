@@ -12,9 +12,11 @@ import (
 	"github.com/xuri/excelize/v2"
 )
 
+var DBLocation = flag.String("db", "dnd35.db", "Location of the database file")
+
 func init() {
 	flag.Parse()
-	db.InitDB(*db.DBLocation)
+	db.InitDB(*DBLocation)
 }
 func main() {
 	f, err := excelize.OpenFile("sheet.xlsx")

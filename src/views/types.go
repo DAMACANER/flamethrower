@@ -6,8 +6,8 @@ import (
 	"github.com/xuri/excelize/v2"
 )
 
-var DefaultPageSize uint64 = 5
-var DefaultStartingPageNumber uint64 = 0
+var DefaultPageSize int64 = 5
+var DefaultStartingPageNumber int64 = 0
 
 type Application struct {
 	App   *tview.Application
@@ -23,51 +23,38 @@ type Element struct {
 }
 
 func TraverseBoxes(currentElement *Element, elements [][]*Element, app *tview.Application) func(event *tcell.EventKey) *tcell.EventKey {
+	moveFocus := func(rowChange, colChange int) {
+		newRow := currentElement.Position.Row + rowChange
+		newCol := currentElement.Position.Column + colChange
+
+		if newRow < 0 || newRow >= len(elements) {
+			return // Out of row bounds
+		}
+
+		row := elements[newRow]
+		if newCol < 0 || newCol >= len(row) {
+			return // Out of column bounds
+		}
+
+		// Adjust for columns out of index
+		if len(row)-1 < newCol {
+			newCol = len(row) - 1
+		}
+
+		currentElement = row[newCol]
+		app.SetFocus(currentElement.View)
+	}
+
 	return func(event *tcell.EventKey) *tcell.EventKey {
 		switch event.Rune() {
 		case 'w', 'W':
-			switch currentElement.Position.Row {
-			case 0:
-				break
-			default:
-				row := elements[currentElement.Position.Row-1]
-				if len(row)-1 < currentElement.Position.Column {
-					currentElement = row[len(row)-1]
-				} else {
-					currentElement = row[currentElement.Position.Column]
-				}
-				app.SetFocus(currentElement.View)
-			}
+			moveFocus(-1, 0)
 		case 'a', 'A':
-			switch currentElement.Position.Column {
-			case 0:
-				break
-			default:
-				currentElement = elements[currentElement.Position.Row][currentElement.Position.Column-1]
-				app.SetFocus(currentElement.View)
-			}
+			moveFocus(0, -1)
 		case 's', 'S':
-			switch currentElement.Position.Row {
-			case len(elements) - 1:
-				break
-			default:
-				row := elements[currentElement.Position.Row+1]
-				if len(row)-1 < currentElement.Position.Column {
-					currentElement = row[len(row)-1]
-				} else {
-					currentElement = row[currentElement.Position.Column]
-				}
-
-				app.SetFocus(currentElement.View)
-			}
+			moveFocus(1, 0)
 		case 'd', 'D':
-			switch currentElement.Position.Column {
-			case len(elements[currentElement.Position.Row]) - 1:
-				break
-			default:
-				currentElement = elements[currentElement.Position.Row][currentElement.Position.Column+1]
-				app.SetFocus(currentElement.View)
-			}
+			moveFocus(0, 1)
 		case 'q', 'Q':
 			app.Stop()
 		}
