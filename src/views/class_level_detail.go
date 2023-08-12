@@ -125,6 +125,7 @@ func handleInputTextChanged(text string, app *tview.Application, inputField *tvi
 
 		if level < 1 || level > max_levels {
 			inputField.SetText("")
+			levelChangeChannel <- LevelChangeEvent{Level: 1}
 			return
 		}
 
