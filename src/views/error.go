@@ -11,20 +11,10 @@ func returnErrorView(app *tview.Application, errorMessage string) *tview.Flex {
 				app.SetRoot(ReturnClassView(app), true)
 			}
 		})
-
-	vFlex := tview.NewFlex()
-
-	// vertical centering
-	vFlex.AddItem(tview.NewBox(), 0, 1, false)
-	vFlex.AddItem(modal, 0, 2, false)
-	vFlex.AddItem(tview.NewBox(), 0, 1, false)
-
-	// horizontal centering
-	hFlex := tview.NewFlex()
-	hFlex.AddItem(tview.NewBox(), 0, 1, false)
-	hFlex.AddItem(vFlex, 0, 2, true)
-	hFlex.AddItem(tview.NewBox(), 0, 1, false)
-	return hFlex
+	modalFlex := tview.NewFlex().
+		AddItem(modal, 0, 1, false)
+	app.SetFocus(modal.Box)
+	return modalFlex
 }
 
 func HandleError(err error, app *tview.Application) {

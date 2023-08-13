@@ -62,12 +62,16 @@ func ReturnClassDetailView(class model.Class, app *tview.Application) *tview.Fle
 	mainFlex.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
 
 		switch event.Key() {
-		case tcell.KeyHome:
+		case tcell.KeyEsc:
 			app.SetRoot(ReturnClassView(app), true)
 		case tcell.KeyEnter:
 			app.SetRoot(ReturnClassLevelDetailView(class, app), true)
 		}
+		switch event.Rune() {
+		case 'q', 'Q':
+			app.Stop()
 
+		}
 		return event
 	})
 
@@ -86,7 +90,7 @@ func classDetailFooter() *tview.TextView {
 	footer.SetBorder(true).SetBorderAttributes(tcell.AttrDim)
 
 	fmt.Fprintf(footer, "[white]W A S D: [red]Change Focus [white]↑↓: [red]Scroll Up/Down in Focused Box \n")
-	fmt.Fprintf(footer, "[white]↵ Enter: [red]Confirm Class [white]Q: [red]Quit [white]Home: [red]Previous Page \n")
+	fmt.Fprintf(footer, "[white]↵ Enter: [red]Confirm Class [white]Q: [red]Quit [white]Esc: [red]Previous Page \n")
 	return footer
 }
 

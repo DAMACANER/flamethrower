@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"strconv"
 	"strings"
+	"sync"
 
 	. "github.com/go-jet/jet/v2/sqlite"
 
@@ -19,6 +20,7 @@ type LevelChangeEvent struct {
 }
 
 var levelChangeChannel = make(chan LevelChangeEvent)
+var levelChangeMutex = &sync.Mutex{}
 
 func ReturnClassLevelDetailView(class model.Class, app *tview.Application) *tview.Flex {
 	// set up selected class levels
@@ -31,19 +33,22 @@ func ReturnClassLevelDetailView(class model.Class, app *tview.Application) *tvie
 	// put a class field in the main flex
 	// it will show first level details initially
 	classFlex := tview.NewFlex().SetDirection(tview.FlexColumn)
+	initialLevel := levels[0]
 	// first part: general details
-	generalDetailsFlex := returnGeneralClassDetailsFlex(levels[0])
+	generalDetailsFlex := returnGeneralClassDetailsFlex(initialLevel)
 	// third part: spell slots
-	slotsDetailFlex := returnSlotsFlex(levels[0])
+	slotsDetailFlex := returnSlotsFlex(initialLevel)
 	// fourth part: spells known
-	spellsKnownFlex := tview.NewFlex().SetDirection(tview.FlexColumn)
+	spellsKnownFlex := returnSpellsKnownFlex(initialLevel)
 	// add all the parts to the class flex
 	// it will be left to right in order
 	classFlex.AddItem(generalDetailsFlex, 0, 1, false)
 	classFlex.AddItem(slotsDetailFlex, 0, 1, false)
 	classFlex.AddItem(spellsKnownFlex, 0, 1, false)
 	// put up the input field
-	inputFlex := returnLevelInputBox(app, len(levels))
+	inputFlex := tview.NewFlex().SetDirection(tview.FlexRow)
+	inputTextField := returnLevelInputBox(app, len(levels))
+	inputFlex.AddItem(inputTextField, 0, 1, false)
 	// get the footbar flex for commands
 	footbarFlex := classLevelDetailFooter()
 
@@ -51,16 +56,45 @@ func ReturnClassLevelDetailView(class model.Class, app *tview.Application) *tvie
 	mainFlex.AddItem(inputFlex, 3, 0, false)
 	mainFlex.AddItem(classFlex, 0, 1, false)
 	mainFlex.AddItem(footbarFlex, 5, 0, false)
-
+	go eventHandler(app, levels, &generalDetailsFlex, &slotsDetailFlex, &spellsKnownFlex)
 	mainFlex.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
-		ch := event.Rune()
-		if ch == 'q' || ch == 'Q' {
+		switch event.Rune() {
+		case 'q', 'Q':
 			app.Stop()
 		}
+		switch event.Key() {
+		case tcell.KeyEnter:
+			// get the level from the input field
+		case tcell.KeyEsc:
+			app.SetRoot(ReturnClassView(app), true)
+		}
+		switch event.Key() {
+		case tcell.KeyUp:
+			// do not handle the updating of the detail boxes here
+			// or do not handle the app drawing
+			//
+			// just increment the level and event handler of input
+			// text field will handle the rest
+			level, err := strconv.Atoi(inputTextField.GetText())
+			if inputTextField.GetText() == "" {
+				// initial input
+				level = 1
+			} else {
+				HandleError(err, app)
+			}
+			inputTextField.SetText(strconv.Itoa(level + 1))
+		case tcell.KeyDown:
+			// same as above
+			level, err := strconv.Atoi(inputTextField.GetText())
+			if inputTextField.GetText() == "" {
+				level = 20
+			} else {
+				HandleError(err, app)
+			}
+			inputTextField.SetText(strconv.Itoa(level - 1))
+		}
 		return event
-	})
-	go eventHandler(app, levels, &generalDetailsFlex, &slotsDetailFlex)
-	// return the centered main flex
+	}) // return the centered main flex
 	return mainFlex
 }
 
@@ -73,7 +107,8 @@ func classLevelDetailFooter() *tview.TextView {
 		SetText("[yellow]Commands: \n").SetTextAlign(tview.AlignCenter)
 
 	footer.SetBorder(true).SetBorderAttributes(tcell.AttrDim)
-	fmt.Fprintf(footer, "[white]↵ Enter: [red]Confirm Class [white]Q: [red]Quit [white]Home: [red]Previous Page \n")
+	fmt.Fprintf(footer, "[white]Up/Down Keys: [red] See Details of Next/Previous Level\n")
+	fmt.Fprintf(footer, "[white]↵ Enter: [red]Confirm Class [white]Q: [red]Quit [white]Esc: [red]Previous Page \n")
 	return footer
 }
 
@@ -101,7 +136,7 @@ func returnLevelInputBox(app *tview.Application, max_levels int) *tview.InputFie
 
 func createInputField(max_levels int) *tview.InputField {
 	inputField := tview.NewInputField().
-		SetLabel(fmt.Sprintf("Enter a level for seeing class details (min 1 / max %d):", max_levels)).
+		SetLabel(fmt.Sprintf("Enter a level (or press Up / Down arrow keys) for seeing class details (min 1 / max %d):", max_levels)).
 		SetFieldWidth(2).
 		SetAcceptanceFunc(tview.InputFieldInteger)
 	inputField.SetTitleAlign(tview.AlignCenter)
@@ -114,6 +149,7 @@ func createInputField(max_levels int) *tview.InputField {
 func handleInputTextChanged(text string, app *tview.Application, inputField *tview.InputField, max_levels int) {
 	if len(text) >= 3 {
 		inputField.SetText("")
+		levelChangeChannel <- LevelChangeEvent{Level: 1}
 		return
 	}
 
@@ -133,18 +169,18 @@ func handleInputTextChanged(text string, app *tview.Application, inputField *tvi
 		levelChangeChannel <- LevelChangeEvent{Level: level}
 	}
 }
-func eventHandler(app *tview.Application, levels []model.ClassLevelTable, generalDetails **tview.Flex, slotDetails **tview.Flex) {
-	for {
-		select {
-		case event := <-levelChangeChannel:
-			app.QueueUpdateDraw(func() {
-				updateGeneralDetails(levels[event.Level-1], *generalDetails)
-				updateSlotDetails(levels[event.Level-1], *slotDetails)
-			})
-		}
+func eventHandler(app *tview.Application, levels []model.ClassLevelTable, generalDetails **tview.Flex, slotDetails **tview.Flex, spellsKnown **tview.Flex) {
+	for v := range levelChangeChannel {
+		levelChangeMutex.Lock()
+		app.QueueUpdateDraw(func() {
+			level := levels[v.Level-1]
+			updateGeneralDetails(level, *generalDetails)
+			updateSlotDetails(level, *slotDetails)
+			updateSpellsKnownDetails(level, *spellsKnown)
+		})
+		levelChangeMutex.Unlock()
 	}
 }
-
 func updateGeneralDetails(level model.ClassLevelTable, generalDetails *tview.Flex) {
 	// Clear existing items
 	(*generalDetails).Clear()
@@ -155,6 +191,12 @@ func updateSlotDetails(level model.ClassLevelTable, slotsFlex *tview.Flex) {
 	// Clear existing items
 	(*slotsFlex).Clear()
 	(*slotsFlex).AddItem(returnSlotsFlex(level), 0, 1, false)
+}
+
+func updateSpellsKnownDetails(level model.ClassLevelTable, spellsKnownFlex *tview.Flex) {
+	// Clear existing items
+	(*spellsKnownFlex).Clear()
+	(*spellsKnownFlex).AddItem(returnSpellsKnownFlex(level), 0, 1, false)
 }
 
 func returnGeneralClassDetailsFlex(level model.ClassLevelTable) *tview.Flex {
@@ -190,8 +232,12 @@ func returnGeneralClassDetailsFlex(level model.ClassLevelTable) *tview.Flex {
 	if notEmpty(level.Special) {
 		// split special by , and make it a list
 		spec := strings.Split(*level.Special, ",")
-		for i, s := range spec {
-			generalDetailsList.AddItem(fmt.Sprintf("Special %d: [skyblue]%s", i+1, strings.TrimSpace(s)), "", 0, nil)
+		if len(spec) == 0 {
+			generalDetailsList.AddItem(fmt.Sprintf("Special: [skyblue]%s", strings.TrimSpace(*level.Special)), "", 0, nil)
+		} else {
+			for i, s := range spec {
+				generalDetailsList.AddItem(fmt.Sprintf("Special %d: [skyblue]%s", i+1, strings.TrimSpace(s)), "", 0, nil)
+			}
 		}
 	}
 	if notEmpty(level.PointsPerDay) {
@@ -256,4 +302,50 @@ func returnSlotsFlex(level model.ClassLevelTable) *tview.Flex {
 	}
 	slotFlex.AddItem(slotList, 0, 1, false)
 	return slotFlex
+}
+
+func returnSpellsKnownFlex(level model.ClassLevelTable) *tview.Flex {
+	spellsKnownFlex := tview.NewFlex()
+	spellsKnownFlex.SetDirection(tview.FlexColumn)
+	spellsKnownList := tview.NewList()
+	spellsKnownList.ShowSecondaryText(false)
+	spellsKnownList.SetBorder(true)
+	spellsKnownList.SetTitle("Spells Known")
+	spellsKnownList.SetTitleAlign(tview.AlignLeft)
+	spellsKnownList.SetBorderColor(tcell.ColorLightBlue)
+	spellsKnownList.SetBorderPadding(1, 1, 2, 2)
+	spellsKnownList.SetBackgroundColor(tcell.ColorBlack)
+	spellsKnownList.AddItem("", "", 0, nil)
+	if notEmpty(level.SpellsKnown0) {
+		spellsKnownList.AddItem(fmt.Sprintf("0: [skyblue]%s", *level.SpellsKnown0), "", 0, nil)
+	}
+	if notEmpty(level.SpellsKnown1) {
+		spellsKnownList.AddItem(fmt.Sprintf("1: [skyblue]%s", *level.SpellsKnown1), "", 0, nil)
+	}
+	if notEmpty(level.SpellsKnown2) {
+		spellsKnownList.AddItem(fmt.Sprintf("2: [skyblue]%s", *level.SpellsKnown2), "", 0, nil)
+	}
+	if notEmpty(level.SpellsKnown3) {
+		spellsKnownList.AddItem(fmt.Sprintf("3: [skyblue]%s", *level.SpellsKnown3), "", 0, nil)
+	}
+	if notEmpty(level.SpellsKnown4) {
+		spellsKnownList.AddItem(fmt.Sprintf("4: [skyblue]%s", *level.SpellsKnown4), "", 0, nil)
+	}
+	if notEmpty(level.SpellsKnown5) {
+		spellsKnownList.AddItem(fmt.Sprintf("5: [skyblue]%s", *level.SpellsKnown5), "", 0, nil)
+	}
+	if notEmpty(level.SpellsKnown6) {
+		spellsKnownList.AddItem(fmt.Sprintf("6: [skyblue]%s", *level.SpellsKnown6), "", 0, nil)
+	}
+	if notEmpty(level.SpellsKnown7) {
+		spellsKnownList.AddItem(fmt.Sprintf("7: [skyblue]%s", *level.SpellsKnown7), "", 0, nil)
+	}
+	if notEmpty(level.SpellsKnown8) {
+		spellsKnownList.AddItem(fmt.Sprintf("8: [skyblue]%s", *level.SpellsKnown8), "", 0, nil)
+	}
+	if notEmpty(level.SpellsKnown9) {
+		spellsKnownList.AddItem(fmt.Sprintf("9: [skyblue]%s", *level.SpellsKnown9), "", 0, nil)
+	}
+	spellsKnownFlex.AddItem(spellsKnownList, 0, 1, false)
+	return spellsKnownFlex
 }
