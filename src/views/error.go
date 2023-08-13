@@ -1,10 +1,14 @@
 package views
 
-import "github.com/rivo/tview"
+import (
+	"fmt"
+
+	"github.com/rivo/tview"
+)
 
 func returnErrorView(app *tview.Application, errorMessage string) *tview.Flex {
 	modal := tview.NewModal().
-		SetText(errorMessage).
+		SetText(fmt.Sprintf("[red]%s \n\n Go back to [white]class selection?", errorMessage)).
 		AddButtons([]string{"OK"}).
 		SetDoneFunc(func(buttonIndex int, buttonLabel string) {
 			if buttonLabel == "OK" {
