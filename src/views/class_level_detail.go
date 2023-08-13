@@ -21,6 +21,7 @@ type LevelChangeEvent struct {
 
 var levelChangeChannel = make(chan LevelChangeEvent)
 var levelChangeMutex = &sync.Mutex{}
+var levelIncrementMutex = &sync.Mutex{}
 
 func ReturnClassLevelDetailView(class model.Class, app *tview.Application) *tview.Flex {
 	// set up selected class levels
@@ -82,7 +83,9 @@ func ReturnClassLevelDetailView(class model.Class, app *tview.Application) *tvie
 			} else {
 				HandleError(err, app)
 			}
+			levelIncrementMutex.Lock()
 			inputTextField.SetText(strconv.Itoa(level + 1))
+			levelIncrementMutex.Unlock()
 		case tcell.KeyDown:
 			// same as above
 			level, err := strconv.Atoi(inputTextField.GetText())
@@ -91,7 +94,9 @@ func ReturnClassLevelDetailView(class model.Class, app *tview.Application) *tvie
 			} else {
 				HandleError(err, app)
 			}
+			levelIncrementMutex.Lock()
 			inputTextField.SetText(strconv.Itoa(level - 1))
+			levelIncrementMutex.Unlock()
 		}
 		return event
 	}) // return the centered main flex
