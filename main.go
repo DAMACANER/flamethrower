@@ -3,7 +3,7 @@ package main
 import (
 	"flag"
 	"flamethrower/src/engine"
-	"flamethrower/src/views"
+	"flamethrower/src/views/class"
 	"fmt"
 	"os"
 
@@ -18,7 +18,7 @@ func init() {
 }
 func main() {
 	app := tview.NewApplication().EnableMouse(true)
-	app.SetRoot(views.ReturnClassView(app), true)
+	app.SetRoot(class.ReturnClassView(app), true)
 	if err := app.Run(); err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		return

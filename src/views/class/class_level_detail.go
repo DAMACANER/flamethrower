@@ -1,9 +1,12 @@
-package views
+package class
 
 import (
 	"flamethrower/src/db/model"
 	"flamethrower/src/db/table"
 	"flamethrower/src/engine"
+	"flamethrower/src/handlers"
+	"flamethrower/src/helpers"
+	"flamethrower/src/types"
 	"fmt"
 	"strconv"
 	"strings"
@@ -81,7 +84,7 @@ func ReturnClassLevelDetailView(class model.Class, app *tview.Application) *tvie
 				// initial input
 				level = 1
 			} else {
-				HandleError(err, app)
+				handlers.Error(err, app)
 			}
 			levelIncrementMutex.Lock()
 			inputTextField.SetText(strconv.Itoa(level + 1))
@@ -92,7 +95,7 @@ func ReturnClassLevelDetailView(class model.Class, app *tview.Application) *tvie
 			if inputTextField.GetText() == "" {
 				level = 20
 			} else {
-				HandleError(err, app)
+				handlers.Error(err, app)
 			}
 			levelIncrementMutex.Lock()
 			inputTextField.SetText(strconv.Itoa(level - 1))
@@ -124,7 +127,7 @@ func fetchClassLevelData(app *tview.Application, class model.Class) []model.Clas
 		ORDER_BY(table.ClassLevelTable.Level.ASC())
 	var data []model.ClassLevelTable
 	err := stmt.Query(engine.DB, &data)
-	HandleError(err, app)
+	handlers.Error(err, app)
 	return data
 }
 
@@ -161,7 +164,7 @@ func handleInputTextChanged(text string, app *tview.Application, inputField *tvi
 	if len(text) > 0 && len(text) < 3 {
 		level, err := strconv.Atoi(text)
 		if err != nil {
-			HandleError(err, app)
+			handlers.Error(err, app)
 		}
 
 		if level < 1 || level > max_levels {
@@ -205,152 +208,122 @@ func updateSpellsKnownDetails(level model.ClassLevelTable, spellsKnownFlex *tvie
 }
 
 func returnGeneralClassDetailsFlex(level model.ClassLevelTable) *tview.Flex {
-	generalDetailsFlex := tview.NewFlex().SetDirection(tview.FlexColumn)
-	generalDetailsList := tview.NewList()
-	generalDetailsList.ShowSecondaryText(false)
-	generalDetailsList.SetBorder(true)
-	generalDetailsList.SetTitle("General Details")
-	generalDetailsList.SetTitleAlign(tview.AlignLeft)
-	generalDetailsList.SetBorderColor(tcell.ColorLightBlue)
-	generalDetailsList.SetBorderPadding(1, 1, 2, 2)
-	generalDetailsList.SetBackgroundColor(tcell.ColorBlack)
-	generalDetailsList.AddItem("", "", 0, nil)
-	generalDetailsList.AddItem(fmt.Sprintf("Name: [skyblue]%s", level.Name), "", 0, nil)
-	if notEmpty(level.Level) {
-		generalDetailsList.AddItem(fmt.Sprintf("Level: [skyblue]%s", *level.Level), "", 0, nil)
+	generalDetailsItems := []types.ListItem{
+		{Label: "", Secondary: "", Shortcut: 0, Color: tcell.ColorWhite},
+		{Label: fmt.Sprintf("Name: [skyblue]%s", level.Name), Shortcut: 0, Color: tcell.ColorWhite},
+		{Label: fmt.Sprintf("Level: [skyblue]%s", *level.Level), Shortcut: 0, Color: tcell.ColorWhite},
+		{Label: fmt.Sprintf("Base Attack Bonus:: [skyblue]%s", *level.BaseAttackBonus), Shortcut: 0, Color: tcell.ColorWhite},
+		{Label: fmt.Sprintf("AC Bonus: [skyblue]%s", *level.AcBonus), Shortcut: 0, Color: tcell.ColorWhite},
+		{Label: fmt.Sprintf("Fort Save: [skyblue]%s", *level.FortSave), Shortcut: 0, Color: tcell.ColorWhite},
+		{Label: fmt.Sprintf("Ref Save: [skyblue]%s", *level.RefSave), Shortcut: 0, Color: tcell.ColorWhite},
+		{Label: fmt.Sprintf("Will Save: [skyblue]%s", *level.WillSave), Shortcut: 0, Color: tcell.ColorWhite},
+		{Label: fmt.Sprintf("Specials: \n %s", formatSpecial(level.Special)), Shortcut: 0, Color: tcell.ColorWhite},
+		{Label: fmt.Sprintf("Points Per Day: [skyblue]%s", *level.PointsPerDay), Shortcut: 0, Color: tcell.ColorWhite},
+		{Label: fmt.Sprintf("Powers Known: [skyblue]%s", *level.PowersKnown), Shortcut: 0, Color: tcell.ColorWhite},
+		{Label: fmt.Sprintf("Unarmed Damage: [skyblue]%s", *level.UnarmedDamage), Shortcut: 0, Color: tcell.ColorWhite},
+		{Label: fmt.Sprintf("Flurry of Blows: [skyblue]%s", *level.FlurryOfBlows), Shortcut: 0, Color: tcell.ColorWhite},
+		{Label: fmt.Sprintf("Unarmored Speed Bonus: [skyblue]%s", *level.UnarmoredSpeedBonus), Shortcut: 0, Color: tcell.ColorWhite},
 	}
-	if notEmpty(level.BaseAttackBonus) {
-		generalDetailsList.AddItem(fmt.Sprintf("Base Attack Bonus: [skyblue]%s", *level.BaseAttackBonus), "", 0, nil)
+
+	options := types.ListAppearanceOptions{
+		ShouldDrawBorder:        true,
+		ShouldShowSecondaryText: true,
+		BorderColor:             tcell.ColorLightBlue,
+		BackgroundColor:         tcell.ColorBlack,
+		TitleAlignment:          tview.AlignLeft,
+		Title:                   "General Details",
+		ListDirection:           tview.FlexColumn,
+		BorderPadding: types.BorderPadding{
+			Top:    1,
+			Bottom: 1,
+			Left:   2,
+			Right:  2,
+		},
 	}
-	if notEmpty(level.AcBonus) {
-		generalDetailsList.AddItem(fmt.Sprintf("AC Bonus: [skyblue]%s", *level.AcBonus), "", 0, nil)
-	}
-	if notEmpty(level.FortSave) {
-		generalDetailsList.AddItem(fmt.Sprintf("Fort Save: [skyblue]%s", *level.FortSave), "", 0, nil)
-	}
-	if notEmpty(level.RefSave) {
-		generalDetailsList.AddItem(fmt.Sprintf("Ref Save: [skyblue]%s", *level.RefSave), "", 0, nil)
-	}
-	if notEmpty(level.WillSave) {
-		generalDetailsList.AddItem(fmt.Sprintf("Will Save: [skyblue]%s", *level.WillSave), "", 0, nil)
-	}
-	if notEmpty(level.Special) {
-		// split special by , and make it a list
-		spec := strings.Split(*level.Special, ",")
-		if len(spec) == 0 {
-			generalDetailsList.AddItem(fmt.Sprintf("Special: [skyblue]%s", strings.TrimSpace(*level.Special)), "", 0, nil)
-		} else {
-			for i, s := range spec {
-				generalDetailsList.AddItem(fmt.Sprintf("Special %d: [skyblue]%s", i+1, strings.TrimSpace(s)), "", 0, nil)
-			}
-		}
-	}
-	if notEmpty(level.PointsPerDay) {
-		generalDetailsList.AddItem(fmt.Sprintf("Points Per Day: [skyblue]%s", *level.PointsPerDay), "", 0, nil)
-	}
-	if notEmpty(level.PowersKnown) {
-		generalDetailsList.AddItem(fmt.Sprintf("Powers Known: [skyblue]%s", *level.PowersKnown), "", 0, nil)
-	}
-	if notEmpty(level.UnarmedDamage) {
-		generalDetailsList.AddItem(fmt.Sprintf("Unarmed Damage: [skyblue]%s", *level.UnarmedDamage), "", 0, nil)
-	}
-	if notEmpty(level.FlurryOfBlows) {
-		generalDetailsList.AddItem(fmt.Sprintf("Flurry of Blows: [skyblue]%s", *level.FlurryOfBlows), "", 0, nil)
-	}
-	if notEmpty(level.UnarmoredSpeedBonus) {
-		generalDetailsList.AddItem(fmt.Sprintf("Unarmored Speed Bonus: [skyblue]%s", *level.UnarmoredSpeedBonus), "", 0, nil)
-	}
-	generalDetailsFlex.AddItem(generalDetailsList, 0, 1, false)
-	return generalDetailsFlex
+
+	return helpers.CreateListFlex("General Details", generalDetailsItems, options)
 }
 
 func returnSlotsFlex(level model.ClassLevelTable) *tview.Flex {
-	slotFlex := tview.NewFlex().SetDirection(tview.FlexColumn)
-	slotList := tview.NewList()
-	slotList.ShowSecondaryText(false)
-	slotList.SetBorder(true)
-	slotList.SetTitle("Slots")
-	slotList.SetTitleAlign(tview.AlignLeft)
-	slotList.SetBorderColor(tcell.ColorLightBlue)
-	slotList.SetBorderPadding(1, 1, 2, 2)
-	slotList.SetBackgroundColor(tcell.ColorBlack)
-	slotList.AddItem("", "", 0, nil)
-	if notEmpty(level.Slots0) {
-		slotList.AddItem(fmt.Sprintf("0: [skyblue]%s", *level.Slots0), "", 0, nil)
+	slotItems := []types.ListItem{
+		{Label: "", Secondary: "", Shortcut: 0, Color: tcell.ColorWhite},
+		{Label: fmt.Sprintf("0: [skyblue]%s", *level.Slots0), Shortcut: 0, Color: tcell.ColorWhite},
+		{Label: fmt.Sprintf("1: [skyblue]%s", *level.Slots1), Shortcut: 0, Color: tcell.ColorWhite},
+		{Label: fmt.Sprintf("2: [skyblue]%s", *level.Slots2), Shortcut: 0, Color: tcell.ColorWhite},
+		{Label: fmt.Sprintf("3: [skyblue]%s", *level.Slots3), Shortcut: 0, Color: tcell.ColorWhite},
+		{Label: fmt.Sprintf("4: [skyblue]%s", *level.Slots4), Shortcut: 0, Color: tcell.ColorWhite},
+		{Label: fmt.Sprintf("5: [skyblue]%s", *level.Slots5), Shortcut: 0, Color: tcell.ColorWhite},
+		{Label: fmt.Sprintf("6: [skyblue]%s", *level.Slots6), Shortcut: 0, Color: tcell.ColorWhite},
+		{Label: fmt.Sprintf("7: [skyblue]%s", *level.Slots7), Shortcut: 0, Color: tcell.ColorWhite},
+		{Label: fmt.Sprintf("8: [skyblue]%s", *level.Slots8), Shortcut: 0, Color: tcell.ColorWhite},
+		{Label: fmt.Sprintf("9: [skyblue]%s", *level.Slots9), Shortcut: 0, Color: tcell.ColorWhite},
 	}
-	if notEmpty(level.Slots1) {
-		slotList.AddItem(fmt.Sprintf("1: [skyblue]%s", *level.Slots1), "", 0, nil)
+
+	options := types.ListAppearanceOptions{
+		ShouldDrawBorder:        true,
+		ShouldShowSecondaryText: false,
+		BorderColor:             tcell.ColorLightBlue,
+		BackgroundColor:         tcell.ColorBlack,
+		TitleAlignment:          tview.AlignLeft,
+		Title:                   "Slots",
+		ListDirection:           tview.FlexColumn,
+		BorderPadding: types.BorderPadding{
+			Top:    1,
+			Bottom: 1,
+			Left:   2,
+			Right:  2,
+		},
 	}
-	if notEmpty(level.Slots2) {
-		slotList.AddItem(fmt.Sprintf("2: [skyblue]%s", *level.Slots2), "", 0, nil)
-	}
-	if notEmpty(level.Slots3) {
-		slotList.AddItem(fmt.Sprintf("3: [skyblue]%s", *level.Slots3), "", 0, nil)
-	}
-	if notEmpty(level.Slots4) {
-		slotList.AddItem(fmt.Sprintf("4: [skyblue]%s", *level.Slots4), "", 0, nil)
-	}
-	if notEmpty(level.Slots5) {
-		slotList.AddItem(fmt.Sprintf("5: [skyblue]%s", *level.Slots5), "", 0, nil)
-	}
-	if notEmpty(level.Slots6) {
-		slotList.AddItem(fmt.Sprintf("6: [skyblue]%s", *level.Slots6), "", 0, nil)
-	}
-	if notEmpty(level.Slots7) {
-		slotList.AddItem(fmt.Sprintf("7: [skyblue]%s", *level.Slots7), "", 0, nil)
-	}
-	if notEmpty(level.Slots8) {
-		slotList.AddItem(fmt.Sprintf("8: [skyblue]%s", *level.Slots8), "", 0, nil)
-	}
-	if notEmpty(level.Slots9) {
-		slotList.AddItem(fmt.Sprintf("9: %s", *level.Slots9), "", 0, nil)
-	}
-	slotFlex.AddItem(slotList, 0, 1, false)
-	return slotFlex
+
+	return helpers.CreateListFlex("Slots", slotItems, options)
+}
+func returnSpellsKnownFlex(level model.ClassLevelTable) *tview.Flex {
+	return helpers.CreateListFlex(
+		"Spells Known",
+		[]types.ListItem{
+			{Label: "", Secondary: "", Shortcut: 0, Color: tcell.ColorWhite},
+			{Label: fmt.Sprintf("0: [skyblue]%s", *level.SpellsKnown0), Shortcut: 0, Color: tcell.ColorWhite},
+			{Label: fmt.Sprintf("1: [skyblue]%s", *level.SpellsKnown1), Shortcut: 0, Color: tcell.ColorWhite},
+			{Label: fmt.Sprintf("2: [skyblue]%s", *level.SpellsKnown2), Shortcut: 0, Color: tcell.ColorWhite},
+			{Label: fmt.Sprintf("3: [skyblue]%s", *level.SpellsKnown3), Shortcut: 0, Color: tcell.ColorWhite},
+			{Label: fmt.Sprintf("4: [skyblue]%s", *level.SpellsKnown4), Shortcut: 0, Color: tcell.ColorWhite},
+			{Label: fmt.Sprintf("5: [skyblue]%s", *level.SpellsKnown5), Shortcut: 0, Color: tcell.ColorWhite},
+			{Label: fmt.Sprintf("6: [skyblue]%s", *level.SpellsKnown6), Shortcut: 0, Color: tcell.ColorWhite},
+			{Label: fmt.Sprintf("7: [skyblue]%s", *level.SpellsKnown7), Shortcut: 0, Color: tcell.ColorWhite},
+			{Label: fmt.Sprintf("8: [skyblue]%s", *level.SpellsKnown8), Shortcut: 0, Color: tcell.ColorWhite},
+			{Label: fmt.Sprintf("9: [skyblue]%s", *level.SpellsKnown9), Shortcut: 0, Color: tcell.ColorWhite},
+		},
+		types.ListAppearanceOptions{
+			ShouldDrawBorder:        true,
+			ShouldShowSecondaryText: false,
+			BorderColor:             tcell.ColorLightBlue,
+			BackgroundColor:         tcell.ColorBlack,
+			TitleAlignment:          tview.AlignLeft,
+			Title:                   "Spells Known",
+			ListDirection:           tview.FlexColumn,
+			BorderPadding: types.BorderPadding{
+				Top:    1,
+				Bottom: 1,
+				Left:   2,
+				Right:  2,
+			},
+		})
 }
 
-func returnSpellsKnownFlex(level model.ClassLevelTable) *tview.Flex {
-	spellsKnownFlex := tview.NewFlex()
-	spellsKnownFlex.SetDirection(tview.FlexColumn)
-	spellsKnownList := tview.NewList()
-	spellsKnownList.ShowSecondaryText(false)
-	spellsKnownList.SetBorder(true)
-	spellsKnownList.SetTitle("Spells Known")
-	spellsKnownList.SetTitleAlign(tview.AlignLeft)
-	spellsKnownList.SetBorderColor(tcell.ColorLightBlue)
-	spellsKnownList.SetBorderPadding(1, 1, 2, 2)
-	spellsKnownList.SetBackgroundColor(tcell.ColorBlack)
-	spellsKnownList.AddItem("", "", 0, nil)
-	if notEmpty(level.SpellsKnown0) {
-		spellsKnownList.AddItem(fmt.Sprintf("0: [skyblue]%s", *level.SpellsKnown0), "", 0, nil)
+func formatSpecial(special *string) string {
+	if !helpers.NotEmpty(special) {
+		return ""
 	}
-	if notEmpty(level.SpellsKnown1) {
-		spellsKnownList.AddItem(fmt.Sprintf("1: [skyblue]%s", *level.SpellsKnown1), "", 0, nil)
+
+	spec := strings.Split(*special, ",")
+	if len(spec) == 0 {
+		return fmt.Sprintf("[skyblue]%s", strings.TrimSpace(*special))
 	}
-	if notEmpty(level.SpellsKnown2) {
-		spellsKnownList.AddItem(fmt.Sprintf("2: [skyblue]%s", *level.SpellsKnown2), "", 0, nil)
+
+	var formattedSpecial []string
+	for i, s := range spec {
+		formattedSpecial = append(formattedSpecial, fmt.Sprintf("Special %d: [skyblue]%s", i+1, strings.TrimSpace(s)))
 	}
-	if notEmpty(level.SpellsKnown3) {
-		spellsKnownList.AddItem(fmt.Sprintf("3: [skyblue]%s", *level.SpellsKnown3), "", 0, nil)
-	}
-	if notEmpty(level.SpellsKnown4) {
-		spellsKnownList.AddItem(fmt.Sprintf("4: [skyblue]%s", *level.SpellsKnown4), "", 0, nil)
-	}
-	if notEmpty(level.SpellsKnown5) {
-		spellsKnownList.AddItem(fmt.Sprintf("5: [skyblue]%s", *level.SpellsKnown5), "", 0, nil)
-	}
-	if notEmpty(level.SpellsKnown6) {
-		spellsKnownList.AddItem(fmt.Sprintf("6: [skyblue]%s", *level.SpellsKnown6), "", 0, nil)
-	}
-	if notEmpty(level.SpellsKnown7) {
-		spellsKnownList.AddItem(fmt.Sprintf("7: [skyblue]%s", *level.SpellsKnown7), "", 0, nil)
-	}
-	if notEmpty(level.SpellsKnown8) {
-		spellsKnownList.AddItem(fmt.Sprintf("8: [skyblue]%s", *level.SpellsKnown8), "", 0, nil)
-	}
-	if notEmpty(level.SpellsKnown9) {
-		spellsKnownList.AddItem(fmt.Sprintf("9: [skyblue]%s", *level.SpellsKnown9), "", 0, nil)
-	}
-	spellsKnownFlex.AddItem(spellsKnownList, 0, 1, false)
-	return spellsKnownFlex
+
+	return strings.Join(formattedSpecial, "\n")
 }

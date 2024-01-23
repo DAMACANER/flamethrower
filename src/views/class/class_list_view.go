@@ -1,9 +1,11 @@
-package views
+package class
 
 import (
+	"flamethrower/src/constants"
 	"flamethrower/src/db/model"
 	"flamethrower/src/db/table"
 	"flamethrower/src/engine"
+	"flamethrower/src/handlers"
 	"sync"
 
 	"github.com/gdamore/tcell/v2"
@@ -12,8 +14,8 @@ import (
 )
 
 func ReturnClassView(app *tview.Application) *tview.Flex {
-	var PageSize int64 = DefaultPageSize
-	var CurrentPageNumber int64 = DefaultStartingPageNumber
+	var PageSize int64 = constants.DefaultPageSize
+	var CurrentPageNumber int64 = constants.DefaultStartingPageNumber
 	stmt := SELECT(table.Class.AllColumns).
 		FROM(table.Class).
 		LIMIT(PageSize).
@@ -21,7 +23,7 @@ func ReturnClassView(app *tview.Application) *tview.Flex {
 		ORDER_BY(table.Class.Name.ASC())
 	var data []model.Class
 	err := stmt.Query(engine.DB, &data)
-	HandleError(err, app)
+	handlers.Error(err, app)
 	list := tview.NewList()
 
 	title := tview.NewTextView()
@@ -35,7 +37,7 @@ func ReturnClassView(app *tview.Application) *tview.Flex {
 
 	query, args := SELECT(COUNT(table.Class.ID)).FROM(table.Class).Sql()
 	err = engine.DB.QueryRow(query, args...).Scan(&cnt)
-	HandleError(err, app)
+	handlers.Error(err, app)
 	fetchingNewData := false
 	var fetchingMutex sync.Mutex
 
@@ -62,7 +64,7 @@ func ReturnClassView(app *tview.Application) *tview.Flex {
 					ORDER_BY(table.Class.Name.ASC())
 				var newData []model.Class
 				err = stmt.Query(engine.DB, &newData)
-				HandleError(err, app)
+				handlers.Error(err, app)
 				app.QueueUpdateDraw(func() {
 					for i, newSkill := range newData {
 						list.AddItem(newSkill.Name, "", rune(len(data)+i), nil)
